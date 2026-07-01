@@ -1,15 +1,24 @@
 ---
-import Base from "../layouts/Base.astro";
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 ---
 
-<Base title="Home" description="Portfolio and blog">
-  <h1>Welcome</h1>
-  
-  <p>Hi, I'm building a minimal portfolio here. This is your space for your story, projects, and ideas.</p>
-  
-  <h2>Featured Work</h2>
-  <p>Check out my <a href="/projects">projects</a> to see what I've been working on.</p>
-  
-  <h2>Latest Posts</h2>
-  <p>Read my <a href="/blog">blog</a> for thoughts and tutorials.</p>
-</Base>
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+		<main>
+      <h1>Hello, Stranger!</h1>
+			<p>
+        Welcome to my portfolio. This website serves as my personal sandbox
+        where I can write about things I like and my accomplishments!.
+			</p>
+		</main>
+		<Footer />
+	</body>
+</html>
