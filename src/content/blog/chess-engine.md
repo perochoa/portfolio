@@ -1,254 +1,115 @@
 ---
 title: "Building a Chess Engine in C++"
-description: "A UCI-compatible chess engine written in C++17 using 64-bit bitboards, alpha-beta search, and perft testing."
+description: "Bitboards, magic bitboards, and a 24-bit move encoding in my C++ chess engine, plus the two silent bugs I found when I came back to it 18 months later."
 pubDate: "May 21 2025"
+updatedDate: "Oct 19 2026"
 heroImage: "../../assets/chess-engine.png"
 ---
 
-## Why Bitboards?
+[CPPChess](https://github.com/perochoa/CPPChess) is a chess engine I started in C++ over the 2024–25 winter break. It isn't finished. It parses positions, generates pseudo-legal moves for every piece, and makes moves on the board, but it can't search or play a game yet. I wanted to understand how real engines represent a board before writing any search code. Going back to it this fall, I found two bugs that had been silently breaking a large part of the move generator.
 
-* **Speed:** Bitwise operations on 64-bit integers are extremely fast.
-* **Clarity:** A single `uint64_t` holds one piece type’s positions.
-* **Parallelism:** You can represent entire move sets or masks in one register.
+This post covers how the engine represents the board and moves, how magic bitboards work, and what went wrong.
 
-*Analogy:* Think of the 8×8 chessboard as a checkerboard painting. Each bit in a 64-bit integer is like one square: either painted (1) or blank (0).
+## One integer per piece type
 
+A chessboard has 64 squares, and a `uint64_t` has 64 bits. A **bitboard** is a 64-bit integer where each bit says whether something is on a square. The engine keeps twelve of them, one for each piece type and colour (white pawns, black knights, and so on), plus three occupancy boards: white, black, and both.
 
-## Understanding Bitboards
-
-A **bitboard** is simply a 64-bit unsigned integer (`uint64_t` in C++). Each bit corresponds to one square on the chessboard:
-
-```
-bit 63 ◄ A8  B8  C8 ... H8 ► bit 56
-...
-bit  7 ◄ A1  B1  C1 ... H1 ► bit  0
-```
-
-* **LSB (bit 0):** A1
-* **MSB (bit 63):** H8
-
-You will typically maintain one bitboard for each piece type and side (e.g., white pawns, black knights, etc.).
-
-## Mapping Squares to Bits
-
-Define an enum or constants for square indices:
+The point is that board questions turn into bitwise operations that run in a cycle or two:
 
 ```cpp
-enum Square {
-    A1, B1, C1, D1, E1, F1, G1, H1,
-    A2, B2, /* ... */ H8,
-    NO_SQ
-};
-
-inline uint64_t square_bitboard(int sq) {
-    return uint64_t(1) << sq;
-}
+Bitboard empty = ~occupancy[BOTH];
+Bitboard white_pawn_pushes = (pieces[P] >> 8) & empty;  // a8 is bit 0, so "up" is a right shift
+Bitboard attacked_by_knight = knight_masks[square] & occupancy[BLACK];
 ```
 
-*Real-world analogy:* If squares are mailboxes numbered 0–63, `square_bitboard(sq)` is how you drop a letter in mailbox `sq`.
+In my layout, `a8` is bit 0 and `h1` is bit 63, which matches the order a FEN string lists squares. That's why a white pawn moving "up" the board is a right shift here. Many engines use the opposite convention, so check this before you copy code from anywhere.
 
+I wrapped the integer in a small `Bitboard` class with operator overloads, so `board[e4] = true` works. The `[]` operator returns a proxy object that sets or clears the bit on assignment. It's syntactic sugar, but it made the move generator read much more like chess than bit-twiddling.
 
-## Basic Bitboard Operations
+## A move fits in 24 bits
 
-| Operation | C++ Code             | Meaning                     |
-| --------- | -------------------- | --------------------------- |
-| AND       | `bb & mask`          | Intersection |
-| OR        | `bb \| mask`         | Union |
-| XOR       | `bb ^ mask`          | Toggle |
-| NOT       | `~bb`                | Inversion |
-| SHIFT     | `bb << n`, `bb >> n` | Slide north/east/south/west |
+Moves get created and thrown away millions of times during search, so each one is packed into a single `int`:
+
+```text
+0000 0000 0000 0000 0011 1111    source square     0x3f
+0000 0000 0000 1111 1100 0000    target square     0xfc0
+0000 0000 1111 0000 0000 0000    piece             0xf000
+0000 1111 0000 0000 0000 0000    promoted piece    0xf0000
+0001 0000 0000 0000 0000 0000    capture           0x100000
+0010 0000 0000 0000 0000 0000    double push       0x200000
+0100 0000 0000 0000 0000 0000    en passant        0x400000
+1000 0000 0000 0000 0000 0000    castling          0x800000
+```
+
+A square needs 6 bits (0 to 63), a piece needs 4 (twelve kinds), and the flags take one bit each. Decoding is a mask and a shift.
+
+## Precomputed attacks
+
+Knights, kings, and pawns always attack the same squares from a given square, no matter what else is on the board. So the engine computes those 64-entry tables once at startup and looks them up afterwards.
+
+Rooks, bishops, and queens are harder because they slide until they hit something. A rook on `a1` attacks a different set of squares depending on what's in its way. The simple approach walks each ray square by square, which works but is slow inside a search that visits millions of positions.
+
+## Magic bitboards
+
+Magic bitboards turn the sliding-piece question into a single table lookup:
+
+1. For each square, build a **relevance mask** of the squares whose occupancy can change the answer. For a rook on `a1`, that's the rest of the a-file and the first rank, minus the edge squares, because a piece on the edge can't block anything behind it. This leaves 12 relevant bits in the corners and 10 in the middle of the board.
+2. AND the real occupancy with that mask. Now only the bits that matter are left.
+3. Multiply by a precomputed 64-bit **magic number** and shift right by `64 - relevant_bits`. A good magic maps every possible blocker pattern to a unique index (or to an index that shares the same attack set).
+4. Use that index into a table filled at startup with the real attack set for every blocker pattern.
 
 ```cpp
-uint64_t all_white = white_pawns | white_knights | ...;
-uint64_t empty = ~(all_white | all_black);
+occupancy &= raw_rook_masks[square];
+occupancy *= ROOK_MAGIC_NUMBERS[square];
+occupancy >>= 64 - ROOK_RELEVANT_BITS[square];
+return rook_masks[square][occupancy];
 ```
 
+Queens are just rook attacks OR bishop attacks. The magic numbers themselves come from a brute-force search: try random sparse 64-bit numbers until one produces no harmful collisions for a square. I used published magics instead of generating my own.
 
-## Initializing the Board
+## The bugs I found 18 months later
 
-Set starting positions using literal bitboards:
+When I came back to the project, I wrote a quick test: generate 12,800 random occupancy boards, compute rook and bishop attacks by walking the rays, and compare that with the magic lookup.
+
+```text
+rook wrong 11262/12800, bishop wrong 10962/12800
+```
+
+That's 88% of rook lookups and 86% of bishop lookups returning the wrong squares. The lookup above was fine. The bug was in the code that **fills** the table at startup:
 
 ```cpp
-const uint64_t START_WHITE_PAWNS = 0x000000000000FF00ULL;
-const uint64_t START_BLACK_PAWNS = 0x00FF000000000000ULL;
-// ... other pieces similarly
-
-struct Position {
-    uint64_t white_pawns, white_rooks, /* ... */;
-    uint64_t black_pawns, black_rooks, /* ... */;
-    bool white_to_move;
-    // castling rights, en passant square, etc.
-};
-
-void init_starting_position(Position &pos) {
-    pos.white_pawns   = START_WHITE_PAWNS;
-    pos.white_rooks   = 0x0000000000000081ULL;
-    // ...
-    pos.white_to_move = true;
-}
+const int magic_bitboard = Magic::ROOK_MAGIC_NUMBERS[square];
+const int magic_shift = 64 - Magic::ROOK_ATTACK_COUNT_MASK[square];
+// ...
+int magic_index = (masked_occupancy * magic_bitboard) >> magic_shift;
 ```
 
-## Move Generation Basics
+A magic number is a 64-bit value, and `const int` keeps only the low 32 bits. So the table was filled using one hash function and read using another. Each attack set landed at an index the lookup would never compute, and the slots the lookup did read held whatever pattern happened to land there. Changing both variables to `uint64_t` fixed it:
 
-### Pawns
-
-* **White pawn pushes:** `(pawns << 8) & empty`
-* **Double pushes:** `((pawns << 8) & empty) << 8 & empty & rank4_mask`
-* **Captures:** `(pawns << 7 & black_pieces & ~file_h_mask) | (pawns << 9 & black_pieces & ~file_a_mask)`
-
-### Knights
-
-Precompute a lookup table of knight attacks:
-
-```cpp
-uint64_t knight_attacks[64];
-
-void init_knight_attacks() {
-    for (int sq = 0; sq < 64; ++sq) {
-        uint64_t b = square_bitboard(sq);
-        // shifts: ±17, ±15, ±10, ±6 with file-edge masks
-        knight_attacks[sq] = compute_knight_attacks(b);
-    }
-}
+```text
+rook wrong 0/12800, bishop wrong 0/12800
 ```
 
-### Kings
+Nothing crashed and nothing looked broken. The engine just quietly produced wrong moves for every rook, bishop, and queen. Clang doesn't warn about the narrowing by default, either; `-Wshorten-64-to-32` (or `-Wconversion`) would have flagged it.
 
-Similar to knights: 8-direction shifts by 1.
+Once I was suspicious, a second test turned up another bug. I set up a lone pawn one step from promoting and counted the moves:
 
-## Sliding Piece Attacks
-
-### Naïve Ray Casting
-
-For each direction, shift until you hit blocker:
-
-```cpp
-uint64_t slider_attacks(int sq, uint64_t occupied, const int dirs[], int dir_count) {
-    uint64_t attacks = 0ULL;
-    for (int i = 0; i < dir_count; ++i) {
-        int dir = dirs[i];
-        int t = sq;
-        while (true) {
-            t += dir;
-            if (offboard(t)) break;
-            attacks |= square_bitboard(t);
-            if (occupied & square_bitboard(t)) break;
-        }
-    }
-    return attacks;
-}
+```text
+white pawn about to promote: 1 moves, 0 with a promotion piece
+black pawn about to promote: 5 moves, 4 with a promotion piece
 ```
 
-### Magic Bitboards (Advanced)
+The correct answer is 4 for both: promote to a queen, rook, bishop, or knight. White's check looks for a pawn on rank 8 (`a8` to `h8`) instead of rank 7, and a white pawn can never be on rank 8, so white never promotes. Black checks the right rank, but a missing `else` adds a plain push after the four promotions, which leaves a pawn sitting on the back rank. The capture branch has the same rank mistake.
 
-Use precomputed magic multipliers to index attack tables in O(1).
+I also found two smaller problems in the magic-bitboard file:
 
-## Making and Unmaking Moves
+- **Fall-through.** The rook case in the initializer has no `return`, so it falls into the king case and recomputes the king mask. That happens to be harmless, because it ORs in the same bits, but it's luck rather than design.
+- **Oversized tables.** All three slider tables are `[64][4096]`. That's right for rooks (2^12 entries for a corner square), but a bishop never has more than 9 relevant bits, so 512 entries would do. There's also a precomputed queen table that mixes rook and bishop indices, which are two different hash spaces. Nothing reads from it, because queen lookups combine the rook and bishop tables, but it still takes 2 MB.
 
-Maintain a **move stack** that saves:
+## What I'd do next
 
-* Piece bitboards
-* Side to move
-* Castling rights
-* En passant square
-* Half-move clock
+- **Test the move generator before anything else.** The standard tool is **perft**: count every leaf node to depth *n* from a known position and compare with published totals. I already had the classic test positions ("tricky", "killer", and so on) saved as FEN strings in the repo, but I never wrote the perft function itself. Perft would have caught both bugs on day one, and it's what I should have built before the move generator grew.
+- **Turn on more compiler warnings.** `-Wall -Wextra -Wconversion` would have flagged the truncation.
+- **Then search.** Negamax with alpha-beta pruning, iterative deepening, and a basic material plus piece-square evaluation, followed by a UCI front end so it can play in a GUI like Cute Chess.
 
-```cpp
-struct State {
-    uint64_t white_pawns, ...;
-    bool white_to_move;
-    int castling_rights;
-    int en_passant_sq;
-    int halfmove_clock;
-};
-
-std::vector<State> history;
-
-void make_move(const Move &m, Position &pos) {
-    history.push_back(pos);
-    apply_move_bits(m, pos);
-    pos.white_to_move = !pos.white_to_move;
-}
-
-void unmake_move(Position &pos) {
-    pos = history.back();
-    history.pop_back();
-}
-```
-
-## Setting Up Search and Evaluation
-
-### Minimax & Alpha–Beta
-
-```cpp
-int alpha_beta(Position &pos, int depth, int alpha, int beta) {
-    if (depth == 0) return evaluate(pos);
-    generate_moves(pos, moves);
-    for (auto &m : moves) {
-        make_move(m, pos);
-        int score = -alpha_beta(pos, depth - 1, -beta, -alpha);
-        unmake_move(pos);
-        if (score >= beta) return beta;
-        alpha = std::max(alpha, score);
-    }
-    return alpha;
-}
-```
-
-### Simple Evaluation Function
-
-* **Material:** Sum of piece values (`P=100`, `N=300`, `B=300`, `R=500`, `Q=900`)
-* **Piece-square tables** for positional bonuses
-
-## Perft Testing
-
-`perft(depth)` counts leaf nodes at given depth:
-
-```cpp
-uint64_t perft(Position &pos, int depth) {
-    if (depth == 0) return 1;
-    generate_moves(pos, moves);
-    uint64_t nodes = 0;
-    for (auto &m : moves) {
-        make_move(m, pos);
-        nodes += perft(pos, depth - 1);
-        unmake_move(pos);
-    }
-    return nodes;
-}
-```
-
-Use known perft numbers to validate correctness at depths 1–6.
-
-
-## Optimizations & Tips
-
-* **Use `__builtin_popcountll`** for fast bit counts.
-* **Bit scan forward/reverse**: `__builtin_ctzll`, `__builtin_clzll`.
-* **Move ordering:** captures first, history heuristic.
-* **Transposition table:** store previously evaluated positions.
-
-
-## Putting It All Together
-
-1. **Initialization:** load starting position, precompute attack tables.
-2. **Main loop:** parse commands (UCI), set options.
-3. **Search:** run alpha–beta to a fixed depth or time limit.
-4. **Output:** best move, PV lines, evaluation score.
-5. **Repeat** on each opponent move.
-
-
-## Wrapping Up
-
-Congratulations! 🎉 You now have a clear roadmap to build a chess engine in C++ using bitboards. While this guide covers the core concepts, real-world engines add many more enhancements: quiescence search, iterative deepening, advanced pruning, time management, and more.
-
-Keep experimenting, profiling, and refining!
-
-## TL;DR
-
-* **Bitboards:** 64-bit ints where each bit is a square.
-* **Move Generation:** precompute simple tables for knights/kings; use shifts for pawns; ray-cast or magic tables for sliders.
-* **Search:** alpha–beta minimax with simple evaluation.
-* **Test:** perft for correctness, then optimize (popcount, bit-scan, transposition tables).
-
-Build step-by-step, and before you know it, you’ll have a fast, competitive chess engine! 🚀
+The main lesson is that a bitboard engine fails silently. Everything compiles, the board prints correctly, and the move counts look plausible. Only a test against known numbers tells you whether the engine is actually right.

@@ -60,11 +60,11 @@ const jobs = [
 	},
 ];
 
-const skills = [
-	['Languages', 'Python, Go, C++, HCL (Terraform), SQL, PromQL, YAML, Bash'],
-	['ML serving', 'NVIDIA Triton Inference Server, MLflow, Flyte, Envoy AI Gateway'],
-	['Infrastructure', 'Kubernetes (EKS), Karpenter, Docker, AWS (EC2, S3, IAM, RDS), Terraform, ArgoCD, Helm'],
-	['Observability', 'Prometheus, Grafana, Grafana Alloy, Mimir, Loki, Tempo, OpenTelemetry'],
+const skills: [string, string[]][] = [
+	['Languages', ['Python', 'Go', 'C++', 'HCL (Terraform)', 'SQL', 'PromQL', 'YAML', 'Bash']],
+	['ML serving', ['NVIDIA Triton Inference Server', 'MLflow', 'Flyte', 'Envoy AI Gateway']],
+	['Infrastructure', ['Kubernetes (EKS)', 'Karpenter', 'Docker', 'AWS (EC2, S3, IAM, RDS)', 'Terraform', 'ArgoCD', 'Helm']],
+	['Observability', ['Prometheus', 'Grafana', 'Grafana Alloy', 'Mimir', 'Loki', 'Tempo', 'OpenTelemetry']],
 ];
 
 const certifications = [
@@ -78,80 +78,93 @@ const certifications = [
 <BaseLayout title={`Experience | ${SITE_TITLE}`} description="Work experience, education, and skills of Alexander Perocho">
 	<main>
 		<h1>Experience</h1>
-		<p>
+		<p class="intro">
 			More than a year on an ML platform team, first at CARFAX and then at Mobility Global after it
 			separated from S&amp;P Global. My focus has been monitoring and logging, SLA alerting, the GitOps deployment
 			pipeline, and access controls for the platform that serves our production models.
 		</p>
 
 		<section>
-			<h2>Work</h2>
+			<h2 class="mono">Work</h2>
 			{
 				jobs.map((job) => (
 					<div class="job">
 						<h3>{job.org}</h3>
-						<div class="meta">
-							<span>{job.orgNote}</span>
-							<span>{job.location}</span>
-						</div>
-						{job.roles.map((role) => (
-							<div class="role">
-								<h4>{role.title}</h4>
-								<div class="meta">
-									<span>{role.dates}</span>
-								</div>
-								<ul>
-									{role.points.map((point) => (
-										<li set:html={point} />
-									))}
-								</ul>
-							</div>
-						))}
+						<p class="org-meta">{[job.orgNote, job.location].filter(Boolean).join(' · ')}</p>
+						<ol class="roles">
+							{job.roles.map((role) => (
+								<li class="role">
+									<div class="role-head">
+										<h4>{role.title}</h4>
+										<span class="mono">{role.dates}</span>
+									</div>
+									<ul>
+										{role.points.map((point) => (
+											<li set:html={point} />
+										))}
+									</ul>
+								</li>
+							))}
+						</ol>
 					</div>
 				))
 			}
 		</section>
 
 		<section>
-			<h2>Leadership</h2>
+			<h2 class="mono">Leadership</h2>
 			<div class="job">
 				<h3>Western Computer Science Undergraduate Society</h3>
-				<div class="role">
-					<h4>Vice President</h4>
-					<div class="meta"><span>Sep 2026 – Present</span><span>London, ON</span></div>
-					<ul>
-						<li>
-							Scaled technical programming to 4 workshops of 15–30 students each, including one co-delivered with an
-							OpenAI engineer, by hiring 5 directors and handing each of them ownership of an event.
-						</li>
-						<li>Created a workshop on using Claude Code in day-to-day developer workflows.</li>
-					</ul>
-				</div>
+				<p class="org-meta">London, ON</p>
+				<ol class="roles">
+					<li class="role">
+						<div class="role-head">
+							<h4>Vice President</h4>
+							<span class="mono">Sep 2026 – Present</span>
+						</div>
+						<ul>
+							<li>
+								Scaled technical programming to 4 workshops of 15–30 students each, including one co-delivered with an
+								OpenAI engineer, by hiring 5 directors and handing each of them ownership of an event.
+							</li>
+							<li>Created a workshop on using Claude Code in day-to-day developer workflows.</li>
+						</ul>
+					</li>
+				</ol>
 			</div>
 		</section>
 
 		<section>
-			<h2>Education</h2>
-			<h3>Western University</h3>
-			<div class="meta"><span>B.Sc. Computer Science, expected Dec 2026</span><span>London, ON</span></div>
-			<h4 class="certifications">Certifications</h4>
-			<ul>
+			<h2 class="mono">Education</h2>
+			<div class="job">
+				<h3>Western University</h3>
+				<div class="role-head">
+					<p class="org-meta">B.Sc. Computer Science · London, ON</p>
+					<span class="mono">Expected Dec 2026</span>
+				</div>
+			</div>
+			<h3 class="certs-title">Certifications</h3>
+			<ul class="certs">
 				{
 					certifications.map((cert) => (
-						<li>{cert.url ? <a href={cert.url} target="_blank">{cert.name}</a> : cert.name}</li>
+						<li>{cert.url ? <a href={cert.url} target="_blank">{cert.name}</a> : <span>{cert.name}</span>}</li>
 					))
 				}
 			</ul>
 		</section>
 
 		<section>
-			<h2>Skills</h2>
+			<h2 class="mono">Skills</h2>
 			<dl>
 				{
 					skills.map(([group, list]) => (
 						<>
 							<dt>{group}</dt>
-							<dd>{list}</dd>
+							<dd>
+								{list.map((skill) => (
+									<span class="chip">{skill}</span>
+								))}
+							</dd>
 						</>
 					))
 				}
@@ -161,58 +174,128 @@ const certifications = [
 </BaseLayout>
 
 <style>
+	.intro {
+		color: var(--muted);
+	}
 	section {
-		margin-bottom: 3em;
+		margin-top: 3.5rem;
+	}
+	section > h2 {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		margin: 0 0 1.5rem;
+		font-size: 0.75rem;
+		font-weight: 500;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+	}
+	section > h2::after {
+		content: '';
+		flex: 1;
+		border-top: 1px solid var(--border);
 	}
 	.job {
-		margin-bottom: 2.5em;
+		margin-bottom: 2.5rem;
 	}
 	.job h3 {
-		margin-bottom: 0.1em;
+		margin: 0;
+		font-size: 1.125rem;
 	}
-	.meta {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: space-between;
-		gap: 0 1em;
-		font-size: 0.85em;
-		color: rgb(var(--gray));
+	.org-meta {
+		margin: 0.1rem 0 0;
+		font-size: 0.9rem;
+		color: var(--muted);
+	}
+	.roles {
+		margin: 1rem 0 0;
+		padding: 0;
+		list-style: none;
 	}
 	.role {
-		margin-top: 1em;
+		position: relative;
+		margin: 0;
+		padding: 0 0 1.25rem 1.5rem;
+		border-left: 1px solid var(--border);
+	}
+	.role:last-child {
+		padding-bottom: 0;
+	}
+	.role::before {
+		content: '';
+		position: absolute;
+		top: 0.5em;
+		left: -5px;
+		width: 9px;
+		height: 9px;
+		border: 2px solid var(--accent);
+		border-radius: 50%;
+		background: var(--bg);
+	}
+	.role:first-child::before {
+		background: var(--accent);
+	}
+	.role-head {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 0 1rem;
 	}
 	.role h4 {
 		margin: 0;
-		font-size: 1.05em;
+		font-size: 1rem;
+		font-weight: 500;
 	}
 	.role ul {
-		margin-top: 0.4em;
+		margin: 0.5rem 0 0;
+		font-size: 0.95rem;
 	}
-	.role li {
-		margin-bottom: 0.4em;
+	.role ul li {
+		margin-bottom: 0.4rem;
 	}
-	.certifications {
-		margin-top: 1em;
+	.certs-title {
+		margin: 0 0 0.5rem;
+		font-size: 1rem;
+	}
+	.certs {
+		font-size: 0.95rem;
+	}
+	.certs span {
+		color: var(--muted);
 	}
 	dl {
 		display: grid;
 		grid-template-columns: max-content 1fr;
-		gap: 0.5em 1.5em;
+		gap: 1rem 1.5rem;
+		margin: 0;
 	}
 	dt {
-		font-weight: 700;
-		color: rgb(var(--black));
+		padding-top: 0.2rem;
+		font-size: 0.9rem;
+		font-weight: 600;
 	}
 	dd {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
 		margin: 0;
+	}
+	.chip {
+		padding: 0.15rem 0.6rem;
+		border: 1px solid var(--border);
+		border-radius: 6px;
+		background: var(--surface);
+		font-family: var(--font-mono);
+		font-size: 0.775rem;
 	}
 	@media (max-width: 720px) {
 		dl {
 			grid-template-columns: 1fr;
-			gap: 0;
+			gap: 0.5rem;
 		}
 		dd {
-			margin-bottom: 0.75em;
+			margin-bottom: 0.75rem;
 		}
 	}
 </style>

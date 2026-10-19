@@ -1,61 +1,57 @@
 ---
-import { SITE_TITLE } from '../consts';
 import { withBase } from '../utils';
 import HeaderLink from './HeaderLink.astro';
-import SocialLinks from './SocialLinks.astro';
 ---
 
 <header>
 	<nav>
-		<h2><a href={withBase("/")}>{SITE_TITLE}</a></h2>
-		<div class="internal-links">
-			<HeaderLink href={withBase("/")}>Home</HeaderLink>
+		<a class="wordmark" href={withBase("/")}>Alex Perocho<span aria-hidden="true">.</span></a>
+		<div class="links">
 			<HeaderLink href={withBase("/experience")}>Experience</HeaderLink>
 			<HeaderLink href={withBase("/blog")}>Blog</HeaderLink>
 			<HeaderLink href={withBase("/about")}>About</HeaderLink>
 		</div>
-		<div class="social-links"><SocialLinks /></div>
 	</nav>
 </header>
 <style>
 	header {
-		margin: 0;
-		padding: 0 1em;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 5%);
-	}
-	h2 {
-		margin: 0;
-		font-size: 1em;
-	}
-
-	h2 a,
-	h2 a.active {
-		text-decoration: none;
+		position: sticky;
+		top: 0;
+		z-index: 10;
+		border-bottom: 1px solid var(--border);
+		background: color-mix(in srgb, var(--bg) 85%, transparent);
+		backdrop-filter: saturate(1.5) blur(10px);
 	}
 	nav {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		gap: 1rem;
+		max-width: calc(var(--wide) + 2 * var(--gutter));
+		height: 3.5rem;
+		margin: 0 auto;
+		padding: 0 var(--gutter);
 	}
-	nav a,
-	.social-links :global(a) {
-		padding: 1em 0.5em;
-		color: rgb(var(--black));
-		border-bottom: 4px solid transparent;
+	.wordmark {
+		font-weight: 600;
+		letter-spacing: -0.02em;
 		text-decoration: none;
+		white-space: nowrap;
 	}
-	nav a.active {
-		text-decoration: none;
-		border-bottom-color: var(--accent);
+	.wordmark:hover {
+		color: inherit;
 	}
-	.social-links,
-	.social-links :global(a) {
+	.wordmark span {
+		color: var(--accent);
+	}
+	.links {
 		display: flex;
+		gap: 1.5rem;
+		font-size: 0.925rem;
 	}
-	@media (max-width: 720px) {
-		.social-links {
-			display: none;
+	@media (max-width: 480px) {
+		.links {
+			gap: 1rem;
 		}
 	}
 </style>
