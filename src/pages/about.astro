@@ -10,7 +10,14 @@ import { SITE_TITLE, SOCIAL } from '../consts';
 	<main>
 		<h1>About Me</h1>
 
-		<Image src={avatar} alt="Alex smiling next to a giant gingerbread man" class="avatar" />
+		<Image
+			src={avatar}
+			alt="Alex smiling next to a giant gingerbread man"
+			class="avatar"
+			width={720}
+			widths={[360, 720, 1080]}
+			sizes="(max-width: 720px) 100vw, 720px"
+		/>
 
 		<p class="intro">
 			I'm Alexander Perocho, an ML Platform Engineer at <a href="https://mobilityglobal.com" target="_blank">Mobility Global</a> (previously S&amp;P Global Mobility)
