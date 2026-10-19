@@ -6,7 +6,6 @@
 
 :root {
   --accent: #2337ff;
-  --accent-dark: #000d8a;
   --black: 15, 18, 25;
   --gray: 96, 115, 159;
   --gray-light: 229, 233, 240;
@@ -75,13 +74,6 @@ p {
 }
 .prose p {
   margin-bottom: 2em;
-}
-textarea {
-  width: 100%;
-  font-size: 16px;
-}
-input {
-  font-size: 16px;
 }
 table {
   width: 100%;

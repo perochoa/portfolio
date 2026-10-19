@@ -112,6 +112,9 @@ const certifications = [
 			.role li {
 				margin-bottom: 0.4em;
 			}
+			.certifications {
+				margin-top: 1em;
+			}
 			dl {
 				display: grid;
 				grid-template-columns: max-content 1fr;
@@ -195,7 +198,7 @@ const certifications = [
 				<h2>Education</h2>
 				<h3>Western University</h3>
 				<div class="meta"><span>B.Sc. Computer Science, expected Dec 2026</span><span>London, ON</span></div>
-				<h4 style="margin-top: 1em;">Certifications</h4>
+				<h4 class="certifications">Certifications</h4>
 				<ul>
 					{
 						certifications.map((cert) => (
