@@ -10,6 +10,9 @@ on:
 jobs:
   sync-resume:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
     
     steps:
     - name: Checkout repository
@@ -85,7 +88,7 @@ jobs:
                 status, done = downloader.next_chunk()
                 
             # Save to local directory
-            local_path = 'src/assets/documents/perocho_resume.pdf'  # Adjust path as needed
+            local_path = 'public/perocho_resume.pdf'
             os.makedirs(os.path.dirname(local_path), exist_ok=True)
             
             # Get hash of current file (if exists)
@@ -134,7 +137,7 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add src/assets/documents/perocho_resume.pdf
+        git add public/perocho_resume.pdf
         git commit -m "🔄 Auto-update resume from Google Drive" || exit 0
         git push
 
@@ -143,7 +146,7 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        gh workflow run "Build and Deploy" --ref main
+        gh workflow run "Deploy to GitHub Pages" --ref main
 
     # - name: Create release (optional)
     #   if: steps.check_changes.outputs.file_changed == 'true'

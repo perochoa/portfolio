@@ -1,0 +1,99 @@
+---
+import { withBase } from '../utils';
+import FormattedDate from '../components/FormattedDate.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPosts } from '../posts';
+import { SITE_DESCRIPTION, SITE_TITLE, SOCIAL } from '../consts';
+
+const recentPosts = (await getPosts()).slice(0, 3);
+---
+
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+	<main>
+		<h1>Hi, I'm Alex.</h1>
+		<p class="lede">
+			I'm an ML platform engineer at <a href="https://mobilityglobal.com" target="_blank">Mobility Global</a> and a final-year
+			Computer Science student at Western University. I build the infrastructure that gets
+			machine learning models from training into production and keeps them healthy once they're there.
+		</p>
+		<p>
+			Day to day that means Kubernetes, NVIDIA Triton, Prometheus and Grafana, and a lot of Helm and Terraform.
+			This site is my sandbox for writing about that work, side projects, and whatever else I'm into.
+		</p>
+		<ul class="links">
+			<li><a href={withBase("/experience")}>Experience</a></li>
+			<li><a href={SOCIAL.github} target="_blank">GitHub</a></li>
+			<li><a href={SOCIAL.linkedin} target="_blank">LinkedIn</a></li>
+			<li><a href={`mailto:${SOCIAL.email}`}>{SOCIAL.email}</a></li>
+		</ul>
+
+		<ul class="stats">
+			<li><strong>20+</strong><span>production Triton model deployments supported</span></li>
+			<li><strong>6</strong><span>EKS clusters across 2 AWS regions</span></li>
+			<li><strong>$66K/yr</strong><span>platform spend cut by trimming observability overhead</span></li>
+		</ul>
+
+		<h2>Recent writing</h2>
+		<ul class="posts">
+			{
+				recentPosts.map((post) => (
+					<li>
+						<a href={withBase(`blog/${post.id}/`)}>{post.data.title}</a>
+						<span class="date">
+							<FormattedDate date={post.data.pubDate} />
+						</span>
+					</li>
+				))
+			}
+		</ul>
+		<p><a href={withBase("/blog")}>All posts &rarr;</a></p>
+	</main>
+</BaseLayout>
+
+<style>
+	.lede {
+		font-size: 1.15em;
+	}
+	.links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5em 1.25em;
+		padding: 0;
+		list-style: none;
+	}
+	.stats {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+		gap: 1em;
+		margin: 2em 0;
+		padding: 0;
+		list-style: none;
+	}
+	.stats li {
+		padding: 0.75em 1em;
+		border-radius: 8px;
+		background: rgb(var(--gray-light));
+	}
+	.stats strong {
+		display: block;
+		font-size: 1.6em;
+		color: rgb(var(--black));
+		line-height: 1.2;
+	}
+	.stats span {
+		font-size: 0.8em;
+		color: rgb(var(--gray));
+	}
+	.posts {
+		padding: 0;
+		list-style: none;
+	}
+	.posts li {
+		margin-bottom: 1em;
+	}
+	.posts .date {
+		display: block;
+		font-size: 0.8em;
+		color: rgb(var(--gray));
+	}
+</style>
