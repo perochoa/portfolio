@@ -1,13 +1,11 @@
 ---
-import { getCollection } from 'astro:content';
 import { withBase } from '../utils';
 import FormattedDate from '../components/FormattedDate.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPosts } from '../posts';
 import { SITE_DESCRIPTION, SITE_TITLE, SOCIAL } from '../consts';
 
-const recentPosts = (await getCollection('blog'))
-	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-	.slice(0, 3);
+const recentPosts = (await getPosts()).slice(0, 3);
 ---
 
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
