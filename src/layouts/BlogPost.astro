@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
+import { withBase } from '../utils';
 import BaseLayout from './BaseLayout.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
@@ -12,24 +13,32 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 <BaseLayout title={title} description={description} image={heroImage}>
 	<main>
 		<article>
-			<div class="hero-image">
-				{heroImage && <Image src={heroImage} width={Math.min(heroImage.width, 1020)} alt="" />}
-			</div>
+			<a class="back mono" href={withBase("/blog")}>&larr; All posts</a>
+			<header>
+				<p class="mono">
+					<FormattedDate date={pubDate} />
+					{
+						updatedDate && (
+							<span>
+								&middot; updated <FormattedDate date={updatedDate} />
+							</span>
+						)
+					}
+				</p>
+				<h1>{title}</h1>
+				{description && <p class="description">{description}</p>}
+			</header>
+			{
+				heroImage && (
+					<Image
+						class="hero"
+						src={heroImage}
+						width={Math.min(heroImage.width, 1360)}
+						alt=""
+					/>
+				)
+			}
 			<div class="prose">
-				<div class="title">
-					<div class="date">
-						<FormattedDate date={pubDate} />
-						{
-							updatedDate && (
-								<div class="last-updated-on">
-									Last updated on <FormattedDate date={updatedDate} />
-								</div>
-							)
-						}
-					</div>
-					<h1>{title}</h1>
-					<hr />
-				</div>
 				<slot />
 			</div>
 		</article>
@@ -37,45 +46,41 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 </BaseLayout>
 
 <style>
-	main {
-		width: calc(100% - 2em);
-		max-width: 100%;
+	.back {
+		display: inline-block;
+		margin-bottom: 2rem;
+		text-decoration: none;
+	}
+	.back:hover {
+		color: var(--accent);
+	}
+	header {
+		margin-bottom: 2rem;
+	}
+	header .mono {
+		margin-bottom: 0.75rem;
+	}
+	h1 {
+		margin-bottom: 0.75rem;
+	}
+	.description {
 		margin: 0;
+		font-size: 1.125rem;
+		color: var(--muted);
 	}
-	.hero-image {
-		width: 100%;
-	}
-	.hero-image img {
+	.hero {
 		display: block;
-		margin: 0 auto;
-		width: auto;
-		max-width: 100%;
-		height: auto;
-		max-height: 480px;
-		border-radius: 12px;
-		box-shadow: var(--box-shadow);
+		width: 100%;
+		max-height: 420px;
+		object-fit: contain;
+		margin-bottom: 2.5rem;
+		border: 1px solid var(--border);
+		background: var(--surface);
 	}
-	.prose {
-		width: 720px;
-		max-width: calc(100% - 2em);
-		margin: auto;
-		padding: 1em;
-		color: rgb(var(--gray-dark));
+	.prose :global(h2:first-child) {
+		margin-top: 0;
 	}
-	.title {
-		margin-bottom: 1em;
-		padding: 1em 0;
-		text-align: center;
-		line-height: 1;
-	}
-	.title h1 {
-		margin: 0 0 0.5em 0;
-	}
-	.date {
-		margin-bottom: 0.5em;
-		color: rgb(var(--gray));
-	}
-	.last-updated-on {
-		font-style: italic;
+	.prose :global(img) {
+		border: 1px solid var(--border);
 	}
 </style>

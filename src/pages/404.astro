@@ -6,7 +6,15 @@ import { withBase } from '../utils';
 
 <BaseLayout title={`Page not found | ${SITE_TITLE}`} description="This page doesn't exist.">
 	<main>
-		<h1>Page not found</h1>
+		<p class="mono">404</p>
+		<h1>This page took a <span class="serif">wrong turn</span>.</h1>
 		<p>There's nothing here. Try the <a href={withBase("/")}>home page</a> or the <a href={withBase("/blog")}>blog</a>.</p>
 	</main>
 </BaseLayout>
+
+<style>
+	.serif {
+		color: var(--accent);
+		font-size: 1.12em;
+	}
+</style>

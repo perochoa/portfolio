@@ -11,94 +11,92 @@ const posts = await getPosts();
 
 <BaseLayout title={`Blog | ${SITE_TITLE}`} description={SITE_DESCRIPTION}>
 	<main>
-		<section>
-			<ul>
-				{
-					posts.map((post) => (
-						<li>
-							<a href={withBase(`blog/${post.id}/`)}>
-								{post.data.heroImage && (
-									<Image width={720} height={360} src={post.data.heroImage} alt="" />
-								)}
-								<h4 class="title">{post.data.title}</h4>
-								<p class="date">
-									<FormattedDate date={post.data.pubDate} />
-								</p>
-							</a>
-						</li>
-					))
-				}
-			</ul>
-		</section>
+		<h1>Blog</h1>
+		<p class="intro">Write-ups of side projects, tools I've built, and things I've learned along the way.</p>
+		<ul class="posts">
+			{
+				posts.map((post) => (
+					<li>
+						<a href={withBase(`blog/${post.id}/`)}>
+							<div class="text">
+								<span class="mono"><FormattedDate date={post.data.pubDate} /></span>
+								<h2>{post.data.title}</h2>
+								<p>{post.data.description}</p>
+							</div>
+							{post.data.heroImage && (
+								<Image width={320} height={200} src={post.data.heroImage} alt="" />
+							)}
+						</a>
+					</li>
+				))
+			}
+		</ul>
 	</main>
 </BaseLayout>
 
 <style>
-	main {
-		width: 960px;
+	.intro {
+		margin-bottom: 2.5rem;
+		color: var(--muted);
 	}
-	ul {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 2rem;
-		list-style-type: none;
+	.posts {
 		margin: 0;
 		padding: 0;
+		list-style: none;
 	}
-	ul li {
-		width: calc(50% - 1rem);
+	.posts li {
+		margin: 0;
+		border-top: 1px solid var(--border);
 	}
-	ul li * {
+	.posts li:last-child {
+		border-bottom: 1px solid var(--border);
+	}
+	.posts a {
+		display: flex;
+		align-items: center;
+		gap: 1.5rem;
+		padding: 1.5rem 0;
 		text-decoration: none;
-		transition: 0.2s ease;
 	}
-	ul li:first-child {
-		width: 100%;
-		margin-bottom: 1rem;
-		text-align: center;
+	.text {
+		flex: 1;
 	}
-	ul li:first-child img {
-		width: 100%;
+	h2 {
+		margin: 0.25rem 0 0.35rem;
+		font-size: 1.125rem;
+		transition: color 0.15s ease;
 	}
-	ul li:first-child .title {
-		font-size: 2.369rem;
-	}
-	ul li img {
-		margin-bottom: 0.5rem;
-		border-radius: 12px;
-	}
-	ul li a {
-		display: block;
-	}
-	.title {
+	.text p {
 		margin: 0;
-		color: rgb(var(--black));
-		line-height: 1;
+		font-size: 0.925rem;
+		line-height: 1.55;
+		color: var(--muted);
 	}
-	.date {
-		margin: 0;
-		color: rgb(var(--gray));
+	img {
+		flex-shrink: 0;
+		width: 160px;
+		height: 100px;
+		object-fit: cover;
+		border: 1px solid var(--border);
+		border-radius: 8px;
+		transition: transform 0.2s ease;
 	}
-	ul li a:hover h4,
-	ul li a:hover .date {
-		color: rgb(var(--accent));
+	.posts a:hover h2 {
+		color: var(--accent);
 	}
-	ul a:hover img {
-		box-shadow: var(--box-shadow);
+	.posts a:hover img {
+		transform: scale(1.03) rotate(-1deg);
 	}
-	@media (max-width: 720px) {
-		ul {
-			gap: 0.5em;
+	@media (max-width: 560px) {
+		.posts a {
+			flex-direction: column-reverse;
+			align-items: stretch;
+			gap: 1rem;
 		}
-		ul li {
+		img {
 			width: 100%;
-			text-align: center;
-		}
-		ul li:first-child {
-			margin-bottom: 0;
-		}
-		ul li:first-child .title {
-			font-size: 1.563em;
+			height: auto;
+			aspect-ratio: 16 / 9;
 		}
 	}
 </style>
