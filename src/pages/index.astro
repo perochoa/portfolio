@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { withBase } from '../utils';
 import FormattedDate from '../components/FormattedDate.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE_DESCRIPTION, SITE_TITLE, SOCIAL } from '../consts';
@@ -22,7 +23,7 @@ const recentPosts = (await getCollection('blog'))
 			This site is my sandbox for writing about that work, side projects, and whatever else I'm into.
 		</p>
 		<ul class="links">
-			<li><a href="/experience">Experience</a></li>
+			<li><a href={withBase("/experience")}>Experience</a></li>
 			<li><a href={SOCIAL.github} target="_blank">GitHub</a></li>
 			<li><a href={SOCIAL.linkedin} target="_blank">LinkedIn</a></li>
 			<li><a href={`mailto:${SOCIAL.email}`}>{SOCIAL.email}</a></li>
@@ -39,7 +40,7 @@ const recentPosts = (await getCollection('blog'))
 			{
 				recentPosts.map((post) => (
 					<li>
-						<a href={`/blog/${post.id}/`}>{post.data.title}</a>
+						<a href={withBase(`blog/${post.id}/`)}>{post.data.title}</a>
 						<span class="date">
 							<FormattedDate date={post.data.pubDate} />
 						</span>
@@ -47,7 +48,7 @@ const recentPosts = (await getCollection('blog'))
 				))
 			}
 		</ul>
-		<p><a href="/blog">All posts &rarr;</a></p>
+		<p><a href={withBase("/blog")}>All posts &rarr;</a></p>
 	</main>
 </BaseLayout>
 

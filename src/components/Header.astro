@@ -1,17 +1,18 @@
 ---
 import { SITE_TITLE } from '../consts';
+import { withBase } from '../utils';
 import HeaderLink from './HeaderLink.astro';
 import SocialLinks from './SocialLinks.astro';
 ---
 
 <header>
 	<nav>
-		<h2><a href="/">{SITE_TITLE}</a></h2>
+		<h2><a href={withBase("/")}>{SITE_TITLE}</a></h2>
 		<div class="internal-links">
-			<HeaderLink href="/">Home</HeaderLink>
-			<HeaderLink href="/experience">Experience</HeaderLink>
-			<HeaderLink href="/blog">Blog</HeaderLink>
-			<HeaderLink href="/about">About</HeaderLink>
+			<HeaderLink href={withBase("/")}>Home</HeaderLink>
+			<HeaderLink href={withBase("/experience")}>Experience</HeaderLink>
+			<HeaderLink href={withBase("/blog")}>Blog</HeaderLink>
+			<HeaderLink href={withBase("/about")}>About</HeaderLink>
 		</div>
 		<div class="social-links"><SocialLinks /></div>
 	</nav>

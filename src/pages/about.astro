@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets';
+import { withBase } from '../utils';
 import avatar from '../assets/avatar.jpg';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE_TITLE, SOCIAL } from '../consts';
@@ -27,7 +28,7 @@ import { SITE_TITLE, SOCIAL } from '../consts';
 			telemetry cheaper to run. I've also worked on identity and access control, like making every model registered in MLflow traceable
 			to a real person. Platform work turned out to be far more design-oriented than I expected. Even when the change is a few lines of YAML,
 			the interesting part is deciding how the system should behave and how someone will support it later. The details are on my
-			<a href="/experience">experience page</a>.
+			<a href={withBase("/experience")}>experience page</a>.
 		</p>
 
 		<h2>Where I'm Headed</h2>
