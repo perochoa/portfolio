@@ -1,138 +1,93 @@
 ---
 title: "Automating Arch Linux Updates with systemd"
-description: "A small bash script plus a systemd service and timer that keeps my Arch + KDE machine up to date and notifies me when it's done."
+description: "A small bash script plus a systemd service and timer that keeps my Arch + KDE machine up to date, and what I'd change about it now."
 pubDate: "Jun 03 2025"
+updatedDate: "Oct 19 2026"
 heroImage: "../../assets/arch-update.jpg"
 ---
 
-## Context
-I recently installed Arch Linux with KDE on my PC, as I wanted to develop my skills as an actual developer. Manually updating my system every few days started to feel like a chore. I decided to automate my system updates to streamline maintenance and ensure my system stays up-to-date.
+I installed Arch Linux with KDE on my PC to get more comfortable with Linux, and updating it by hand every few days quickly became a chore. So I automated it: a bash script that refreshes the mirror list, upgrades the system, and cleans the package cache, run once a day by a systemd timer, with a desktop notification when it finishes.
 
----
+This post walks through the setup. At the end there's a section on what I'd do differently now, because a year of working on production infrastructure changed how I think about a few of these choices.
+
 ## Dependencies
 
-This is a list of the dependencies I had to manually install with `sudo pacman -S ...` to get my script to run properly.
-
-| Dependency          | Purpose |
-| ------------------- | ------- |
-| `visudo`            | Safely edit the sudoers file |
-| `reflector + rsync` | Rank and refresh pacman mirrors |
-| `paccache`          | Prune old cached packages (from `pacman-contrib`) |
-| `notify-send`       | Desktop notifications (from `libnotify`) |
-
----
-## Setup
-
-## Shell-Scripting
-First, I got all the scripting files/directories I needed ready. I made a designated `scripting/` directory to store the update script and any future scripts I create.
+| Package | Why |
+| --- | --- |
+| `reflector`, `rsync` | Rank and refresh the pacman mirror list |
+| `pacman-contrib` | Provides `paccache`, which prunes old cached packages |
+| `libnotify` | Provides `notify-send` for desktop notifications |
 
 ```bash
-# Script Files
-mkdir ~/scripts # Create a directory that houses all of my scripts
-touch ~/scripts/arch-update.sh # Create the script file
-chmod +x arch-update.sh # Make script executable
+sudo pacman -S reflector rsync pacman-contrib libnotify
 ```
 
-I knew that the nature of the script (system updates) would need super user privileges, so I went ahead and gave the dependencies `sudo` permissions without requiring confirmation by editing the `sudoers` file with `visudo`.
+## The script
+
+I keep personal scripts in `~/scripts`:
 
 ```bash
-sudo visudo
+mkdir -p ~/scripts ~/.local/logs
+touch ~/scripts/arch-update.sh
+chmod +x ~/scripts/arch-update.sh
 ```
-
-I added the line:
-`<username> ALL=(ALL) NOPASSWD: /usr/bin/pacman, /usr/bin/paccache, /usr/bin/reflector`
-
-which allowed me to run `pacman`, `paccache`, and `reflector` commands without requiring me to enter my password.
-
-Next, I wrote the actual script.
 
 ```bash
 #!/bin/bash
 set -euo pipefail
 
-# Logging
 LOGFILE="/home/<username>/.local/logs/arch-update.log"
 mkdir -p "$(dirname "$LOGFILE")"
 exec > >(tee -a "$LOGFILE") 2>&1
 
-# Begin System Update
-echo "[$(date)] Starting System Update..."
-echo "[*] Updating Mirrors..."
-reflector --country Canada --completion 100 --latest 10 --download-timeout 60 --sort rate --save /etc/pacman.d/mirrorlist
-echo "[*] Running System Update"
+echo "[$(date)] Starting system update"
+
+echo "[*] Updating mirrors"
+reflector --country Canada --completion-percent 100 --latest 10 \
+  --download-timeout 60 --sort rate --save /etc/pacman.d/mirrorlist
+
+echo "[*] Upgrading packages"
 pacman -Syu --noconfirm
-echo "[*] Cleaning up old package cache..."
+
+echo "[*] Cleaning the package cache"
 paccache -r
-echo "[$(date)] Update Complete"
 
-# Desktop Notification
+echo "[$(date)] Update complete"
+
+# Tell the desktop session it finished.
 USER_ID=$(id -u <username>)
-export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$USER_ID/bus"
-sudo -u <username> DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS notify-send "System Update" "Update completed!"
+sudo -u <username> DISPLAY=:0 \
+  DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$USER_ID/bus" \
+  notify-send "System update" "Update completed!"
 ```
 
-I learned that the logging portion of the script essentially enabled this:
-```plaintext
-          ┌────────────┐
-stdout ─▶│            │
-stderr ─▶│ tee -a log │ ──▶ Terminal
-          │            │ ──▶ log file
-          └────────────┘
-```
-## Logging
+A few notes:
 
-I wanted to log the script to keep persisted records of what the script does, when it runs, and any errors that occur during execution for debugging purposes and so I could better understand the behavior of the script. I made sure to keep the naming of the files consistent with what I wrote in the update script.
+- `set -euo pipefail` stops the script on the first failure, so a failed mirror refresh doesn't go on to upgrade from a stale list.
+- `exec > >(tee -a "$LOGFILE") 2>&1` sends everything the script prints, including errors, to both the terminal and the log file.
+- `paccache -r` keeps the three most recent versions of each package and deletes the rest. Without it, `/var/cache/pacman/pkg` grows forever.
+- The notification is the awkward part. The script runs as root with no desktop session, so it has to point `notify-send` at my user's D-Bus session bus and run as me.
 
-I created a designated `logs/` directory to keep any log files for the update script and any future scripts I create.
+## The service and the timer
 
-```bash
-mkdir ~/.local/logs # create a local directory for storing my log files.
-touch ~/.local/logs/arch-update.log # create the log file.
-chmod 664 ~/.local/logs/arch-update.log # Give owner & group rw permissions and other read-only permissions.
-```
-
-## Automated Scheduled Execution
-
-The entire purpose of making the script was to automate any updates my system needed, so naturally I set up the required files for performing scheduled execution of the update script. I made sure to keep my naming consistent to avoid any confusion.
-
-```bash
-# Create service and timer for scheduled run:
-touch /etc/systemd/system/arch-update.service # Create an 'update' Service that will execute arch-update.sh.
-touch /etc/systemd/system/arch-update.timer # Create a timer to schedule when the service runs.
-```
+systemd separates *what* runs (a service) from *when* it runs (a timer).
 
 ```ini
-; arch-update.service
-
+# /etc/systemd/system/arch-update.service
 [Unit]
-Description=Arch Linux System Update
+Description=Arch Linux system update
 
 [Service]
 Type=oneshot
 ExecStart=/home/<username>/scripts/arch-update.sh
-
-; [Unit] marks the file as a unit.
-; Description shows up in `systemctl status` and `journalctl`
-
-; [Service] Mark this unit file as a `systemd` service
-; Type Tells `systemd` that the script runs once and exits.
-; ExecStart tells `systemd` the command (script) to run when this service starts.
 ```
 
-I manually triggered the service to test if it worked
-
-```bash
-sudo systemctl daemon-reload # reread all unit files (Since we created I new service)
-sudo systemctl start arch-update.service # Start the service
-sudo systemctl status arch-update.service # Check the status.
-```
-
-Then I made the schedule/timer for the service:
+`Type=oneshot` tells systemd the script runs to completion and exits, rather than staying up as a daemon.
 
 ```ini
-; arch-update.timer
+# /etc/systemd/system/arch-update.timer
 [Unit]
-Description=Run Arch Update Script Daily
+Description=Run the Arch update script daily
 
 [Timer]
 OnCalendar=daily
@@ -140,20 +95,30 @@ Persistent=true
 
 [Install]
 WantedBy=timers.target
-
-; [Unit] marks the file as a unit.
-; Description shows up in `systemctl status` and `journalctl`
-
-; [Timer] Mark this unit file as a `systemd` scheduled execution of a service.
-; OnCalendar is when to run the service.
-; Persistent means that the service will run on the next boot if the scheduled time elapsed while the system was off.
-
-; [Install] Starts the timer automatically on boot.
 ```
 
-And I reloaded `systemd` to reflect my updates.
+`Persistent=true` matters on a desktop. If the machine was off at midnight, the job runs at the next boot instead of being skipped.
+
+Test the service once by hand, then enable the timer:
+
 ```bash
-sudo systemctl daemon-reexec # Rerun `systemd`
-sudo systemctl daemon-reload # Reread all the unit files
-sudo systemctl enable --now arch-update.timer # Enable the schedule/timer for the service
+sudo systemctl daemon-reload
+sudo systemctl start arch-update.service
+systemctl status arch-update.service
+sudo systemctl enable --now arch-update.timer
+systemctl list-timers arch-update.timer
 ```
+
+## What I'd change now
+
+This worked, but reading it a year later, a few things stand out.
+
+**I gave away root for no reason.** The first version of this post also added a `sudoers` rule so I could run `pacman`, `paccache`, and `reflector` without a password. The timer never needed it: a system service already runs as root. And `NOPASSWD` on `pacman` is effectively passwordless root, because `pacman -U` will install any package file you hand it, including one with an install script that does whatever it wants. I've removed that step. If you added it, delete the line with `sudo visudo`.
+
+**Unattended `-Syu --noconfirm` is a gamble on Arch.** Arch occasionally ships updates that need a manual step, announced on the [Arch news page](https://archlinux.org/news/). An unattended upgrade skips reading it. A safer version would only *check* for updates (`checkupdates`, also from `pacman-contrib`) and notify me, leaving the actual upgrade to when I'm at the keyboard. The automated part should be the reminder, not the root-level change.
+
+**systemd already keeps the logs.** Anything a service prints goes to the journal, so `journalctl -u arch-update` shows every run with timestamps, no log file or `tee` needed. My hand-rolled log file also had no rotation.
+
+**Add some jitter.** `RandomizedDelaySec=30m` in the timer spreads the run out, which is kinder to mirrors when lots of machines are set to `daily`.
+
+The general lesson, which I've since seen at a much larger scale at work: automation that changes a system should be cautious, observable, and easy to roll back. Automation that only tells you something needs attention can be as aggressive as you like.
