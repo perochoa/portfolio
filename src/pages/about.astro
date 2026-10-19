@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import avatar from '../assets/avatar.jpg';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { SITE_TITLE } from '../consts';
+import { SITE_TITLE, SOCIAL } from '../consts';
 ---
 
 <BaseLayout title={`About | ${SITE_TITLE}`} description="Learn more about Alexander Perocho">
@@ -66,7 +66,7 @@ import { SITE_TITLE } from '../consts';
 		<h2>Let's Connect</h2>
 		<p>
 			If you'd like to talk about ML platforms, observability, or anything else, reach out at
-			<a href="mailto:perocho.xela@gmail.com">perocho.xela@gmail.com</a> or on <a href="https://linkedin.com/in/aperocho" target="_blank">LinkedIn</a>.
+			<a href={`mailto:${SOCIAL.email}`}>{SOCIAL.email}</a> or on <a href={SOCIAL.linkedin} target="_blank">LinkedIn</a>.
 		</p>
 	</main>
 </BaseLayout>

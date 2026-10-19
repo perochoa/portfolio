@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { SITE_DESCRIPTION, SITE_TITLE, SOCIAL } from '../consts';
 
 const recentPosts = (await getCollection('blog'))
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
@@ -23,9 +23,9 @@ const recentPosts = (await getCollection('blog'))
 		</p>
 		<ul class="links">
 			<li><a href="/experience">Experience</a></li>
-			<li><a href="https://github.com/perochoa" target="_blank">GitHub</a></li>
-			<li><a href="https://linkedin.com/in/aperocho" target="_blank">LinkedIn</a></li>
-			<li><a href="mailto:perocho.xela@gmail.com">perocho.xela@gmail.com</a></li>
+			<li><a href={SOCIAL.github} target="_blank">GitHub</a></li>
+			<li><a href={SOCIAL.linkedin} target="_blank">LinkedIn</a></li>
+			<li><a href={`mailto:${SOCIAL.email}`}>{SOCIAL.email}</a></li>
 		</ul>
 
 		<ul class="stats">
