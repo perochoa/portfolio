@@ -7,7 +7,7 @@ import BaseLayout from './BaseLayout.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, draft } = Astro.props;
 ---
 
 <BaseLayout title={title} description={description} image={heroImage}>
@@ -15,6 +15,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 		<article>
 			<a class="back mono" href={withBase("/blog")}>&larr; All posts</a>
 			<header>
+				{draft && <p class="draft mono">Draft: only visible in astro dev</p>}
 				<p class="mono">
 					<FormattedDate date={pubDate} />
 					{
@@ -56,6 +57,13 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 	}
 	header {
 		margin-bottom: 2rem;
+	}
+	.draft {
+		display: inline-block;
+		padding: 0.15em 0.6em;
+		border-radius: 4px;
+		background: var(--accent-soft);
+		color: var(--accent);
 	}
 	header .mono {
 		margin-bottom: 0.75rem;

@@ -19,7 +19,10 @@ const posts = await getPosts();
 					<li>
 						<a href={withBase(`blog/${post.id}/`)}>
 							<div class="text">
-								<span class="mono"><FormattedDate date={post.data.pubDate} /></span>
+								<span class="mono">
+									<FormattedDate date={post.data.pubDate} />
+									{post.data.draft && <span class="draft">Draft</span>}
+								</span>
 								<h2>{post.data.title}</h2>
 								<p>{post.data.description}</p>
 							</div>
@@ -71,6 +74,13 @@ const posts = await getPosts();
 		font-size: 0.925rem;
 		line-height: 1.55;
 		color: var(--muted);
+	}
+	.draft {
+		margin-left: 0.5em;
+		padding: 0.1em 0.5em;
+		border-radius: 4px;
+		background: var(--accent-soft);
+		color: var(--accent);
 	}
 	img {
 		flex-shrink: 0;

@@ -15,9 +15,9 @@ Loki's compactor has a `retention_enabled` flag, and ours was `true`. That looks
 
 ```yaml
 compactor:
-  retention_enabled: true      # the mechanism is on...
+  retention_enabled: true   # the mechanism is on...
 limits_config:
-  retention_period: 0s         # ...but 0 means "never delete" (the default)
+  retention_period: 0s      # ...but 0s (the default) never deletes
 ```
 
 That's a footgun, and an easy one to miss in a review: the setting called "retention enabled" says yes, so people assume it's done. When I check a config now, I don't stop at the obvious flag. I check that every value it depends on is actually set.
