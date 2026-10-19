@@ -1,0 +1,224 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+
+const jobs = [
+	{
+		org: 'Mobility Global',
+		orgNote: 'formerly S&P Global Mobility',
+		location: 'London, ON (Hybrid)',
+		roles: [
+			{
+				title: 'ML Platform Engineer (Associate, Part-Time)',
+				dates: 'Sep 2026 – Present',
+				points: [
+					'Standardized SLA monitoring across 20+ NVIDIA Triton model deployments with a reusable Helm template built on Grafana Operator CRDs, AWS SNS (via ACK), and PagerDuty, replacing team-specific configurations.',
+					'Migrating model telemetry off Python sidecars onto Envoy AI Gateway route metrics, so services get gateway-native telemetry without per-service instrumentation.',
+				],
+			},
+			{
+				title: 'ML Platform Engineer Intern',
+				dates: 'May 2026 – Aug 2026',
+				points: [
+					'Fixed recurring pod scheduling failures by correcting kubelet eviction and ephemeral storage settings across 3 CPU and 4 GPU EKS node classes.',
+					'Root-caused a silent misconfiguration that had zeroed every SLA rule, then made per-model p95 latency and availability queryable in constant time with Prometheus recording rules.',
+					'Split Grafana out of a monolithic LGTM umbrella chart into an independently versioned deployment, migrating 11 tenant organizations across 2 production environments with zero dashboard or datasource loss.',
+				],
+			},
+		],
+	},
+	{
+		org: 'CARFAX',
+		location: 'London, ON',
+		roles: [
+			{
+				title: 'MLOps Intern',
+				dates: 'Sep 2025 – Apr 2026',
+				points: [
+					'Cut platform spend by $66K/year (9%) by profiling telemetry collectors and reducing observability overhead 70%.',
+					'Removed cross-account deploy risk across 9 clusters with a context-switching CLI. Recognized with an <a href="https://www.linkedin.com/feed/update/urn:li:activity:7422348823395647488/" target="_blank">Intern Spotlight</a>.',
+					'Built Grafana multi-tenancy that isolates logs, metrics, and traces for 8+ tenant organizations using Grafana Alloy tenant routing, per-tenant Mimir and Loki storage, and Okta-governed RBAC. Wrote the design doc comparing two auth architectures that settled the team\'s approach.',
+					'Unblocked the launch of a DistilBigBird transformer model by extending the Python Triton request broker to return binary tensor encoding, since FP16 outputs couldn\'t be sent as JSON.',
+					'Closed an audit gap on model registration by propagating OIDC identity from Flyte pods through the Kubernetes Downward API into the MLflow client, so every registered model is attributable to a real user.',
+				],
+			},
+		],
+	},
+	{
+		org: 'Long Branch Neighbourhood Association',
+		location: 'Toronto, ON',
+		roles: [
+			{
+				title: 'Mobile Front End Developer',
+				dates: 'May 2020 – Aug 2020',
+				points: [
+					'Built the cross-platform UI for a community trails app in Flutter and Dart, which reached 2,700+ organic downloads and a 4.4-star rating across 250+ ratings on iOS and Android.',
+					'Integrated interactive Google Maps navigation for 3 hiking trails, drawing 3,500+ interactions from a community of 10,000+ residents.',
+				],
+			},
+		],
+	},
+];
+
+const skills = [
+	['Languages', 'Python, Go, C++, HCL (Terraform), SQL, PromQL, YAML, Bash'],
+	['ML serving', 'NVIDIA Triton Inference Server, MLflow, Flyte, Envoy AI Gateway'],
+	['Infrastructure', 'Kubernetes (EKS), Karpenter, Docker, AWS (EC2, S3, IAM, RDS), Terraform, ArgoCD, Helm'],
+	['Observability', 'Prometheus, Grafana, Grafana Alloy, Mimir, Loki, Tempo, OpenTelemetry'],
+];
+
+const certifications = [
+	{ name: 'AWS Certified Cloud Practitioner', url: 'https://www.credly.com/badges/8a05268a-9ef4-401c-a40d-7a0e3ed6aa8d/public_url' },
+	{ name: 'IBM Systems (Intermediate)', url: 'https://www.credly.com/badges/bfaf81ab-2ab2-49be-a9d3-e16a452f552d/public_url' },
+	{ name: 'IBM Systems (Advanced)', url: 'https://www.credly.com/badges/fa4e0f98-eb48-4086-adbd-65791403c28f/public_url' },
+	{ name: 'AWS Solutions Architect Associate (in progress)' },
+];
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`Experience | ${SITE_TITLE}`} description="Work experience, education, and skills of Alexander Perocho" />
+		<style>
+			section {
+				margin-bottom: 3em;
+			}
+			.job {
+				margin-bottom: 2.5em;
+			}
+			.job h3 {
+				margin-bottom: 0.1em;
+			}
+			.meta {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: space-between;
+				gap: 0 1em;
+				font-size: 0.85em;
+				color: rgb(var(--gray));
+			}
+			.role {
+				margin-top: 1em;
+			}
+			.role h4 {
+				margin: 0;
+				font-size: 1.05em;
+			}
+			.role ul {
+				margin-top: 0.4em;
+			}
+			.role li {
+				margin-bottom: 0.4em;
+			}
+			dl {
+				display: grid;
+				grid-template-columns: max-content 1fr;
+				gap: 0.5em 1.5em;
+			}
+			dt {
+				font-weight: 700;
+				color: rgb(var(--black));
+			}
+			dd {
+				margin: 0;
+			}
+			@media (max-width: 720px) {
+				dl {
+					grid-template-columns: 1fr;
+					gap: 0;
+				}
+				dd {
+					margin-bottom: 0.75em;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>Experience</h1>
+			<p>
+				More than a year on an ML platform team, first at CARFAX and then at Mobility Global after it
+				separated from S&amp;P Global. My focus has been monitoring and logging, SLA alerting, the GitOps deployment
+				pipeline, and access controls for the platform that serves our production models.
+			</p>
+
+			<section>
+				<h2>Work</h2>
+				{
+					jobs.map((job) => (
+						<div class="job">
+							<h3>{job.org}</h3>
+							<div class="meta">
+								<span>{job.orgNote}</span>
+								<span>{job.location}</span>
+							</div>
+							{job.roles.map((role) => (
+								<div class="role">
+									<h4>{role.title}</h4>
+									<div class="meta">
+										<span>{role.dates}</span>
+									</div>
+									<ul>
+										{role.points.map((point) => (
+											<li set:html={point} />
+										))}
+									</ul>
+								</div>
+							))}
+						</div>
+					))
+				}
+			</section>
+
+			<section>
+				<h2>Leadership</h2>
+				<div class="job">
+					<h3>Western Computer Science Undergraduate Society</h3>
+					<div class="role">
+						<h4>Vice President</h4>
+						<div class="meta"><span>Sep 2026 – Present</span><span>London, ON</span></div>
+						<ul>
+							<li>
+								Scaled technical programming to 4 workshops of 15–30 students each, including one co-delivered with an
+								OpenAI engineer, by hiring 5 directors and handing each of them ownership of an event.
+							</li>
+							<li>Created a workshop on using Claude Code in day-to-day developer workflows.</li>
+						</ul>
+					</div>
+				</div>
+			</section>
+
+			<section>
+				<h2>Education</h2>
+				<h3>Western University</h3>
+				<div class="meta"><span>B.Sc. Computer Science, expected Dec 2026</span><span>London, ON</span></div>
+				<h4 style="margin-top: 1em;">Certifications</h4>
+				<ul>
+					{
+						certifications.map((cert) => (
+							<li>{cert.url ? <a href={cert.url} target="_blank">{cert.name}</a> : cert.name}</li>
+						))
+					}
+				</ul>
+			</section>
+
+			<section>
+				<h2>Skills</h2>
+				<dl>
+					{
+						skills.map(([group, list]) => (
+							<>
+								<dt>{group}</dt>
+								<dd>{list}</dd>
+							</>
+						))
+					}
+				</dl>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
