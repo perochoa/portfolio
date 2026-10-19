@@ -1,96 +1,87 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
 import { Image } from 'astro:assets';
 import avatar from '../assets/avatar.jpg';
-import Header from '../components/Header.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE_TITLE } from '../consts';
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={`About | ${SITE_TITLE}`} description="Learn more about Alexander Perocho" />
-		<style>
-			.avatar {
-				width: 100%;
-				height: 320px;
-				object-fit: cover;
-				object-position: 25% 30%;
-				margin-bottom: 1.5rem;
-			}
-			.intro {
-				font-size: 1.125rem;
-				margin-bottom: 2rem;
-				color: rgb(var(--gray));
-			}
-		</style>
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>About Me</h1>
+<BaseLayout title={`About | ${SITE_TITLE}`} description="Learn more about Alexander Perocho">
+	<main>
+		<h1>About Me</h1>
 
-			<Image src={avatar} alt="Alex smiling next to a giant gingerbread man" class="avatar" />
+		<Image src={avatar} alt="Alex smiling next to a giant gingerbread man" class="avatar" />
 
-			<p class="intro">
-				I'm Alexander Perocho, an ML Platform Engineer at <a href="https://mobilityglobal.com" target="_blank">Mobility Global</a> (previously S&amp;P Global Mobility)
-				and a final-year Computer Science student at Western University.
-			</p>
+		<p class="intro">
+			I'm Alexander Perocho, an ML Platform Engineer at <a href="https://mobilityglobal.com" target="_blank">Mobility Global</a> (previously S&amp;P Global Mobility)
+			and a final-year Computer Science student at Western University.
+		</p>
 
-			<h2>What I Do</h2>
-			<p>
-				I work on the ML platform team, which runs the infrastructure that other teams use to deploy, serve, and monitor their models:
-				20+ NVIDIA Triton deployments for 6+ product teams, across 6 EKS clusters in 2 AWS regions. I joined in September 2025 as an
-				MLOps intern at CARFAX, stayed on through the company's separation from S&amp;P Global, and now work part-time while I finish my degree.
-			</p>
-			<p>
-				Most of my time has gone into observability: multi-tenant Grafana, SLA alerting that model owners actually trust, and making
-				telemetry cheaper to run. I've also worked on identity and access control, like making every model registered in MLflow traceable
-				to a real person. Platform work turned out to be far more design-oriented than I expected. Even when the change is a few lines of YAML,
-				the interesting part is deciding how the system should behave and how someone will support it later. The details are on my
-				<a href="/experience">experience page</a>.
-			</p>
+		<h2>What I Do</h2>
+		<p>
+			I work on the ML platform team, which runs the infrastructure that other teams use to deploy, serve, and monitor their models:
+			20+ NVIDIA Triton deployments for 6+ product teams, across 6 EKS clusters in 2 AWS regions. I joined in September 2025 as an
+			MLOps intern at CARFAX, stayed on through the company's separation from S&amp;P Global, and now work part-time while I finish my degree.
+		</p>
+		<p>
+			Most of my time has gone into observability: multi-tenant Grafana, SLA alerting that model owners actually trust, and making
+			telemetry cheaper to run. I've also worked on identity and access control, like making every model registered in MLflow traceable
+			to a real person. Platform work turned out to be far more design-oriented than I expected. Even when the change is a few lines of YAML,
+			the interesting part is deciding how the system should behave and how someone will support it later. The details are on my
+			<a href="/experience">experience page</a>.
+		</p>
 
-			<h2>Where I'm Headed</h2>
-			<p>
-				I want to keep working on platform engineering for ML, and to move closer to the ML side of it: model deployment, serving, and the
-				path from training to production. I graduate in December 2026.
-			</p>
+		<h2>Where I'm Headed</h2>
+		<p>
+			I want to keep working on platform engineering for ML, and to move closer to the ML side of it: model deployment, serving, and the
+			path from training to production. I graduate in December 2026.
+		</p>
 
-			<h2>Tech Stack</h2>
-			<p>
-				My bread and butter is <strong>AWS and Kubernetes</strong>: EKS, Karpenter, Helm, ArgoCD, and Terraform. For observability I use the
-				Grafana LGTM stack (Loki, Grafana, Tempo, Mimir) with Grafana Alloy, Prometheus, and OpenTelemetry. On the ML side I work with
-				NVIDIA Triton, MLflow, and Flyte.
-			</p>
-			<p>
-				I write <strong>Python</strong> for services and tooling, some <strong>Go</strong>, and a lot of <strong>shell</strong>. I live in the terminal,
-				using Ghostty and a LazyVim-based Neovim setup.
-			</p>
+		<h2>Tech Stack</h2>
+		<p>
+			My bread and butter is <strong>AWS and Kubernetes</strong>: EKS, Karpenter, Helm, ArgoCD, and Terraform. For observability I use the
+			Grafana LGTM stack (Loki, Grafana, Tempo, Mimir) with Grafana Alloy, Prometheus, and OpenTelemetry. On the ML side I work with
+			NVIDIA Triton, MLflow, and Flyte.
+		</p>
+		<p>
+			I write <strong>Python</strong> for services and tooling, some <strong>Go</strong>, and a lot of <strong>shell</strong>. I live in the terminal,
+			using Ghostty and a LazyVim-based Neovim setup.
+		</p>
 
-			<h2>Beyond Work</h2>
-			<p>
-				I'm Vice President of Western's Computer Science Undergraduate Society, where I run our technical workshops. This term that has
-				included one co-delivered with an OpenAI engineer and a workshop I built on using Claude Code day to day.
-			</p>
+		<h2>Beyond Work</h2>
+		<p>
+			I'm Vice President of Western's Computer Science Undergraduate Society, where I run our technical workshops. This term that has
+			included one co-delivered with an OpenAI engineer and a workshop I built on using Claude Code day to day.
+		</p>
 
-			<h2>Outside of Work</h2>
-			<p>
-				I'm someone who values a healthy lifestyle. I'm an avid runner, currently training for my first full marathon, and a competitive cross-country mountain biker. 
-				I've competed in events like the 24 Hours of Summer Solstice in Ontario and continue to explore the sport.
-			</p>
-			<p>
-				I grew up as a competitive swimmer and still enjoy time in the water. I'm passionate about the outdoors, I've hiked the entire Bruce Trail with my family, 
-				and we make annual camping trips to crown lands. When I'm not outside, you might find me playing the guitar or singing (though I wouldn't call myself good at either).
-			</p>
+		<h2>Outside of Work</h2>
+		<p>
+			I'm someone who values a healthy lifestyle. I'm an avid runner, currently training for my first full marathon, and a competitive cross-country mountain biker.
+			I've competed in events like the 24 Hours of Summer Solstice in Ontario and continue to explore the sport.
+		</p>
+		<p>
+			I grew up as a competitive swimmer and still enjoy time in the water. I'm passionate about the outdoors, I've hiked the entire Bruce Trail with my family,
+			and we make annual camping trips to crown lands. When I'm not outside, you might find me playing the guitar or singing (though I wouldn't call myself good at either).
+		</p>
 
-			<h2>Let's Connect</h2>
-			<p>
-				If you'd like to talk about ML platforms, observability, or anything else, reach out at
-				<a href="mailto:perocho.xela@gmail.com">perocho.xela@gmail.com</a> or on <a href="https://linkedin.com/in/aperocho" target="_blank">LinkedIn</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
-</html>
+		<h2>Let's Connect</h2>
+		<p>
+			If you'd like to talk about ML platforms, observability, or anything else, reach out at
+			<a href="mailto:perocho.xela@gmail.com">perocho.xela@gmail.com</a> or on <a href="https://linkedin.com/in/aperocho" target="_blank">LinkedIn</a>.
+		</p>
+	</main>
+</BaseLayout>
+
+<style>
+	.avatar {
+		width: 100%;
+		height: 320px;
+		object-fit: cover;
+		object-position: 25% 30%;
+		margin-bottom: 1.5rem;
+	}
+	.intro {
+		font-size: 1.125rem;
+		margin-bottom: 2rem;
+		color: rgb(var(--gray));
+	}
+</style>
