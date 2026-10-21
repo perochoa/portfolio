@@ -5,8 +5,7 @@ import { defineConfig, fontProviders } from "astro/config";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://perochoa.github.io",
-  base: "/portfolio",
+  site: "https://perocho.com",
   integrations: [sitemap()],
   markdown: {
     shikiConfig: {
