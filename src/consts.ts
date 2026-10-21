@@ -6,5 +6,5 @@ export const SOCIAL = {
   github: "https://github.com/perochoa",
   linkedin: "https://linkedin.com/in/aperocho",
   instagram: "https://www.instagram.com/perocho.xela/",
-  email: "perocho.xela@gmail.com",
+  email: "contact@perocho.com",
 } as const;
