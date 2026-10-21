@@ -23,6 +23,7 @@ Requires Node `>=22.12.0`.
 
 ## Deploy
 
-The site is a static build intended for GitHub Pages. Set `site` (and `base`, if it is served
-from a project page such as `/portfolio/`) in `astro.config.mjs` before deploying, so canonical
-URLs, the RSS feed and the sitemap point at the real host.
+The site is a static build deployed to GitHub Pages at [perocho.com](https://perocho.com).
+`site` in `astro.config.mjs` must match that domain, so canonical URLs, the RSS feed and the
+sitemap point at the real host. `public/CNAME` holds the custom domain, which is also set under
+the repository's Settings > Pages.
