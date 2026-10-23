@@ -5,6 +5,7 @@ CLAUDE.md is a tracked symlink to AGENTS.md. Chore/cleanup (#7) wrote `@AGENTS.m
 
 ## Status
 - [x] AGENTS.md rewritten from /init: commands, architecture, deploy, content rules, gotchas (taken from README, source, and .handoff/v2.md)
+- [x] Pruned .handoff/: deleted the four merged-branch docs, trimmed v2.md to open items, moved the favicon regen commands into AGENTS.md
 - [ ] User review, then push and open a PR
 
 ## Decisions
