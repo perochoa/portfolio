@@ -59,3 +59,8 @@ repo's Pages settings. `public/CNAME` is kept as well, although the Actions depl
   with no space. Put the break between plain words instead. To find cases:
   `grep -rhoE '[A-Za-z,.]<a href|</a>[A-Za-z(]' dist --include=*.html`
 - `main` squash-merges PRs.
+- `public/favicon.ico` and `public/apple-touch-icon.png` are rasterized from `favicon.svg`, so
+  regenerate them after changing it (`$S` is a temp dir). The svg's text uses Georgia, so
+  rasterize on a machine that has it.
+  `for n in 16 32 48; do rsvg-convert -w $n -h $n public/favicon.svg -o $S/fav-$n.png; done; magick $S/fav-{16,32,48}.png public/favicon.ico`
+  `rsvg-convert -w 180 -h 180 -b '#c2410c' public/favicon.svg -o public/apple-touch-icon.png`
