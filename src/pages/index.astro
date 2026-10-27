@@ -1,0 +1,250 @@
+---
+import { withBase } from '../utils';
+import FormattedDate from '../components/FormattedDate.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPosts } from '../posts';
+import { SITE_DESCRIPTION, SITE_TITLE, SOCIAL } from '../consts';
+
+const recentPosts = (await getPosts()).slice(0, 3);
+---
+
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+	<main>
+		<p class="status mono"><span class="dot" aria-hidden="true"></span>ML Platform Engineer at Mobility Global</p>
+		<h1>Hi, I'm <span class="serif">Alex</span>.</h1>
+		<p class="lede">
+			I'm an ML platform engineer at <a href="https://mobilityglobal.com" target="_blank">Mobility Global</a> and a final-year
+			Computer Science student at Western University. I build the infrastructure that gets
+			machine learning models from training into production and keeps them healthy once they're there.
+		</p>
+		<p>
+			Day to day that means Kubernetes, NVIDIA Triton, Prometheus and Grafana, and a lot of Helm and Terraform.
+			This site is my sandbox for writing about that work, side projects, and whatever else I'm into.
+		</p>
+		<ul class="actions">
+			<li><a class="button primary" href={withBase("/experience")}>Experience <span aria-hidden="true">&rarr;</span></a></li>
+			<li><a class="button" href={SOCIAL.github} target="_blank">GitHub</a></li>
+			<li><a class="button" href={SOCIAL.linkedin} target="_blank">LinkedIn</a></li>
+			<li><a class="button" href={`mailto:${SOCIAL.email}`}>Email</a></li>
+		</ul>
+
+		<ul class="stats">
+			<li><strong>20+</strong><span>production Triton model deployments supported</span></li>
+			<li><strong>6</strong><span>EKS clusters across 2 AWS regions</span></li>
+			<li><strong>$66K<small>/yr</small></strong><span>platform spend cut by trimming observability overhead</span></li>
+		</ul>
+
+		<div class="section-head">
+			<h2>Recent writing</h2>
+			<a class="mono" href={withBase("/blog")}>All posts &rarr;</a>
+		</div>
+		<ul class="posts">
+			{
+				recentPosts.map((post) => (
+					<li>
+						<a href={withBase(`blog/${post.id}/`)}>
+							<span class="title">{post.data.title}</span>
+							<span class="mono"><FormattedDate date={post.data.pubDate} /></span>
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</main>
+</BaseLayout>
+
+<style>
+	main {
+		padding-top: 5rem;
+	}
+	.status {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.6em;
+		margin-bottom: 1.5rem;
+		padding: 0.3em 0.8em;
+		border: 1px solid var(--border);
+		border-radius: 999px;
+		background: var(--surface);
+	}
+	.dot {
+		width: 0.5em;
+		height: 0.5em;
+		border-radius: 50%;
+		background: #22c55e;
+		box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5);
+		animation: pulse 2.4s ease-out infinite;
+	}
+	@keyframes pulse {
+		70% {
+			box-shadow: 0 0 0 0.5em rgba(34, 197, 94, 0);
+		}
+		100% {
+			box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.dot {
+			animation: none;
+		}
+	}
+	h1 {
+		font-size: 3rem;
+		margin-bottom: 1.25rem;
+	}
+	h1 .serif {
+		color: var(--accent);
+		font-size: 1.12em;
+		padding-right: 0.04em;
+	}
+	.lede {
+		font-size: 1.125rem;
+	}
+	p:not(.lede):not(.status) {
+		color: var(--muted);
+	}
+
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6rem;
+		margin: 2rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+	.actions li {
+		margin: 0;
+	}
+	.button {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4em;
+		padding: 0.5em 1em;
+		border: 1px solid var(--border);
+		border-radius: 8px;
+		font-size: 0.925rem;
+		font-weight: 500;
+		text-decoration: none;
+		transition:
+			border-color 0.15s ease,
+			background 0.15s ease,
+			transform 0.15s ease;
+	}
+	.button:hover {
+		border-color: var(--accent);
+		color: var(--accent);
+	}
+	.button.primary {
+		border-color: var(--text);
+		background: var(--text);
+		color: var(--bg);
+	}
+	.button.primary:hover {
+		border-color: var(--accent);
+		background: var(--accent);
+		color: var(--bg);
+	}
+	.button.primary span {
+		transition: transform 0.15s ease;
+	}
+	.button.primary:hover span {
+		transform: translateX(3px);
+	}
+
+	.stats {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1.5rem;
+		margin: 4rem 0;
+		padding: 0;
+		list-style: none;
+	}
+	.stats li {
+		margin: 0;
+		padding-top: 1rem;
+		border-top: 1px solid var(--border);
+	}
+	.stats strong {
+		display: block;
+		margin-bottom: 0.25rem;
+		font-size: 1.75rem;
+		font-weight: 600;
+		letter-spacing: -0.03em;
+		line-height: 1.2;
+	}
+	.stats small {
+		font-size: 0.55em;
+		font-weight: 400;
+		color: var(--muted);
+		letter-spacing: 0;
+	}
+	.stats span {
+		display: block;
+		font-size: 0.85rem;
+		line-height: 1.45;
+		color: var(--muted);
+	}
+
+	.section-head {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		margin-bottom: 0.5rem;
+	}
+	.section-head h2 {
+		margin: 0;
+	}
+	.section-head a {
+		text-decoration: none;
+	}
+	.section-head a:hover {
+		color: var(--accent);
+	}
+	.posts {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.posts li {
+		margin: 0;
+		border-bottom: 1px solid var(--border);
+	}
+	.posts a {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 1rem;
+		padding: 0.9rem 0;
+		text-decoration: none;
+	}
+	.posts a .mono {
+		flex-shrink: 0;
+	}
+	.posts a:hover .title {
+		color: var(--accent);
+	}
+	@media (max-width: 720px) {
+		main {
+			padding-top: 3rem;
+		}
+		h1 {
+			font-size: 2.4rem;
+		}
+		.actions {
+			gap: 0.5rem;
+		}
+		.button {
+			padding: 0.45em 0.8em;
+			font-size: 0.875rem;
+		}
+		.stats {
+			grid-template-columns: 1fr;
+			gap: 1rem;
+			margin: 3rem 0;
+		}
+		.posts a {
+			flex-direction: column;
+			gap: 0.1rem;
+		}
+	}
+</style>

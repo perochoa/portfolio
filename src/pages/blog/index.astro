@@ -1,0 +1,112 @@
+---
+import { Image } from 'astro:assets';
+import { withBase } from '../../utils';
+import FormattedDate from '../../components/FormattedDate.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getPosts } from '../../posts';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+
+const posts = await getPosts();
+---
+
+<BaseLayout title={`Blog | ${SITE_TITLE}`} description={SITE_DESCRIPTION}>
+	<main>
+		<h1>Blog</h1>
+		<p class="intro">Write-ups of side projects, tools I've built, and things I've learned along the way.</p>
+		<ul class="posts">
+			{
+				posts.map((post) => (
+					<li>
+						<a href={withBase(`blog/${post.id}/`)}>
+							<div class="text">
+								<span class="mono">
+									<FormattedDate date={post.data.pubDate} />
+									{post.data.draft && <span class="draft">Draft</span>}
+								</span>
+								<h2>{post.data.title}</h2>
+								<p>{post.data.description}</p>
+							</div>
+							{post.data.heroImage && (
+								<Image width={320} height={200} src={post.data.heroImage} alt="" />
+							)}
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</main>
+</BaseLayout>
+
+<style>
+	.intro {
+		margin-bottom: 2.5rem;
+		color: var(--muted);
+	}
+	.posts {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.posts li {
+		margin: 0;
+		border-top: 1px solid var(--border);
+	}
+	.posts li:last-child {
+		border-bottom: 1px solid var(--border);
+	}
+	.posts a {
+		display: flex;
+		align-items: center;
+		gap: 1.5rem;
+		padding: 1.5rem 0;
+		text-decoration: none;
+	}
+	.text {
+		flex: 1;
+	}
+	h2 {
+		margin: 0.25rem 0 0.35rem;
+		font-size: 1.125rem;
+		transition: color 0.15s ease;
+	}
+	.text p {
+		margin: 0;
+		font-size: 0.925rem;
+		line-height: 1.55;
+		color: var(--muted);
+	}
+	.draft {
+		margin-left: 0.5em;
+		padding: 0.1em 0.5em;
+		border-radius: 4px;
+		background: var(--accent-soft);
+		color: var(--accent);
+	}
+	img {
+		flex-shrink: 0;
+		width: 160px;
+		height: 100px;
+		object-fit: cover;
+		border: 1px solid var(--border);
+		border-radius: 8px;
+		transition: transform 0.2s ease;
+	}
+	.posts a:hover h2 {
+		color: var(--accent);
+	}
+	.posts a:hover img {
+		transform: scale(1.03) rotate(-1deg);
+	}
+	@media (max-width: 560px) {
+		.posts a {
+			flex-direction: column-reverse;
+			align-items: stretch;
+			gap: 1rem;
+		}
+		img {
+			width: 100%;
+			height: auto;
+			aspect-ratio: 16 / 9;
+		}
+	}
+</style>

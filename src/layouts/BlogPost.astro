@@ -1,0 +1,94 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import FormattedDate from '../components/FormattedDate.astro';
+import { withBase } from '../utils';
+import BaseLayout from './BaseLayout.astro';
+
+type Props = CollectionEntry<'blog'>['data'];
+
+const { title, description, pubDate, updatedDate, heroImage, draft } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} image={heroImage}>
+	<main>
+		<article>
+			<a class="back mono" href={withBase("/blog")}>&larr; All posts</a>
+			<header>
+				{draft && <p class="draft mono">Draft: only visible in astro dev</p>}
+				<p class="mono">
+					<FormattedDate date={pubDate} />
+					{
+						updatedDate && (
+							<span>
+								&middot; updated <FormattedDate date={updatedDate} />
+							</span>
+						)
+					}
+				</p>
+				<h1>{title}</h1>
+				{description && <p class="description">{description}</p>}
+			</header>
+			{
+				heroImage && (
+					<Image
+						class="hero"
+						src={heroImage}
+						width={Math.min(heroImage.width, 1360)}
+						alt=""
+					/>
+				)
+			}
+			<div class="prose">
+				<slot />
+			</div>
+		</article>
+	</main>
+</BaseLayout>
+
+<style>
+	.back {
+		display: inline-block;
+		margin-bottom: 2rem;
+		text-decoration: none;
+	}
+	.back:hover {
+		color: var(--accent);
+	}
+	header {
+		margin-bottom: 2rem;
+	}
+	.draft {
+		display: inline-block;
+		padding: 0.15em 0.6em;
+		border-radius: 4px;
+		background: var(--accent-soft);
+		color: var(--accent);
+	}
+	header .mono {
+		margin-bottom: 0.75rem;
+	}
+	h1 {
+		margin-bottom: 0.75rem;
+	}
+	.description {
+		margin: 0;
+		font-size: 1.125rem;
+		color: var(--muted);
+	}
+	.hero {
+		display: block;
+		width: 100%;
+		max-height: 420px;
+		object-fit: contain;
+		margin-bottom: 2.5rem;
+		border: 1px solid var(--border);
+		background: var(--surface);
+	}
+	.prose :global(h2:first-child) {
+		margin-top: 0;
+	}
+	.prose :global(img) {
+		border: 1px solid var(--border);
+	}
+</style>

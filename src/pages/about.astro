@@ -1,0 +1,125 @@
+---
+import { Image } from 'astro:assets';
+import { withBase } from '../utils';
+import avatar from '../assets/avatar.jpg';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_TITLE, SOCIAL } from '../consts';
+---
+
+<BaseLayout title={`About | ${SITE_TITLE}`} description="Learn more about Alexander Perocho">
+	<main>
+		<div class="hero">
+			<Image
+				src={avatar}
+				alt="Alex smiling next to a giant gingerbread man"
+				class="avatar"
+				width={280}
+				widths={[140, 280, 420]}
+				sizes="140px"
+			/>
+			<div>
+				<h1>About <span class="serif">me</span></h1>
+				<p class="intro">
+					I'm Alexander Perocho, an ML Platform Engineer at <a href="https://mobilityglobal.com" target="_blank">Mobility Global</a> (previously S&amp;P Global Mobility)
+					and a final-year Computer Science student at Western University.
+				</p>
+			</div>
+		</div>
+
+		<h2>What I Do</h2>
+		<p>
+			I work on the ML platform team, which runs the infrastructure that other teams use to deploy, serve, and monitor their models:
+			20+ NVIDIA Triton deployments for 6+ product teams, across 6 EKS clusters in 2 AWS regions. I joined in September 2025 as an
+			MLOps intern at CARFAX, stayed on through the company's separation from S&amp;P Global, and now work part-time while I finish my degree.
+		</p>
+		<p>
+			Most of my time has gone into observability: multi-tenant Grafana, SLA alerting that model owners actually trust, and making
+			telemetry cheaper to run. I've also worked on identity and access control, like making every model registered in MLflow traceable
+			to a real person. Platform work turned out to be far more design-oriented than I expected. Even when the change is a few lines of YAML,
+			the interesting part is deciding how the system should behave and how someone will support it later. The details are
+			on my <a href={withBase("/experience")}>experience page</a>.
+		</p>
+
+		<h2>Where I'm Headed</h2>
+		<p>
+			I want to keep working on platform engineering for ML, and to move closer to the ML side of it: model deployment, serving, and the
+			path from training to production. I graduate in December 2026.
+		</p>
+
+		<h2>Tech Stack</h2>
+		<p>
+			My bread and butter is <strong>AWS and Kubernetes</strong>: EKS, Karpenter, Helm, ArgoCD, and Terraform. For observability I use the
+			Grafana LGTM stack (Loki, Grafana, Tempo, Mimir) with Grafana Alloy, Prometheus, and OpenTelemetry. On the ML side I work with
+			NVIDIA Triton, MLflow, and Flyte.
+		</p>
+		<p>
+			I write <strong>Python</strong> for services and tooling, some <strong>Go</strong>, and a lot of <strong>shell</strong>. I live in the terminal,
+			using Ghostty and a LazyVim-based Neovim setup.
+		</p>
+
+		<h2>Beyond Work</h2>
+		<p>
+			I'm Vice President of Western's Computer Science Undergraduate Society, where I run our technical workshops. This term that has
+			included one co-delivered with an OpenAI engineer and a workshop I built on using Claude Code day to day.
+		</p>
+
+		<h2>Outside of Work</h2>
+		<p>
+			I'm someone who values a healthy lifestyle. I'm an avid runner, currently training for my first full marathon, and a competitive cross-country mountain biker.
+			I've competed in events like the 24 Hours of Summer Solstice in Ontario and continue to explore the sport.
+		</p>
+		<p>
+			I grew up as a competitive swimmer and still enjoy time in the water. I'm passionate about the outdoors, I've hiked the entire Bruce Trail with my family,
+			and we make annual camping trips to crown lands. When I'm not outside, you might find me playing the guitar or singing (though I wouldn't call myself good at either).
+		</p>
+
+		<h2>Let's Connect</h2>
+		<p>
+			If you'd like to talk about ML platforms, observability, or anything else, reach
+			out at <a href={`mailto:${SOCIAL.email}`}>{SOCIAL.email}</a> or on <a href={SOCIAL.linkedin} target="_blank">LinkedIn</a>.
+		</p>
+	</main>
+</BaseLayout>
+
+<style>
+	.hero {
+		display: flex;
+		align-items: center;
+		gap: 2rem;
+		margin-bottom: 1rem;
+	}
+	.avatar {
+		flex-shrink: 0;
+		width: 140px;
+		height: 140px;
+		object-fit: cover;
+		object-position: 25% 30%;
+		border-radius: 50%;
+		border: 1px solid var(--border);
+		transform: rotate(-3deg);
+		transition: transform 0.3s ease;
+	}
+	.avatar:hover {
+		transform: rotate(3deg) scale(1.04);
+	}
+	h1 .serif {
+		color: var(--accent);
+		font-size: 1.12em;
+	}
+	.intro {
+		margin: 0;
+		font-size: 1.075rem;
+		color: var(--muted);
+	}
+	@media (max-width: 560px) {
+		.hero {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 1.25rem;
+		}
+		.avatar {
+			width: 112px;
+			height: 112px;
+		}
+	}
+</style>

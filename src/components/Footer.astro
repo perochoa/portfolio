@@ -1,0 +1,44 @@
+---
+import { SOCIAL } from '../consts';
+import SocialLinks from './SocialLinks.astro';
+
+const today = new Date();
+---
+
+<footer>
+	<div class="inner">
+		<span class="mono">&copy; {today.getFullYear()} Alexander Perocho</span>
+		<div class="social-links">
+			<a href={`mailto:${SOCIAL.email}`} class="mono">{SOCIAL.email}</a>
+			<SocialLinks />
+		</div>
+	</div>
+</footer>
+<style>
+	footer {
+		border-top: 1px solid var(--border);
+	}
+	.inner {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		max-width: calc(var(--wide) + 2 * var(--gutter));
+		margin: 0 auto;
+		padding: 1.75rem var(--gutter);
+	}
+	.social-links {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+	}
+	.social-links :global(a) {
+		display: flex;
+		color: var(--muted);
+		text-decoration: none;
+	}
+	.social-links :global(a:hover) {
+		color: var(--accent);
+	}
+</style>
