@@ -1,68 +1,51 @@
 ---
 title: "Alex tries to dance!"
-description: "..."
-pubDate: "Jul 08 2022"
+description: "Two years on a beginner hip hop team: why dance didn't stick for me, and why the people did."
+pubDate: "Oct 27 2026"
 heroImage: "../../assets/dance.jpg"
 draft: true
 ---
 
-Story about dance & my experience...
-I was introduced to dance by friends. [@Michael Yik](https://www.instagram.com/_michaelyik_/)
+I never thought I'd be any good at dance. I'm not flexible, and I'd never done anything like it. I spent two years on a beginner hip hop team anyway, and it turned out to be one of the better decisions I've made, just not for the reasons I expected.
 
-Yik had created a social group [Westside Crew](https://instagram.com/West5ide.crew)
+## How I got into it
 
-I joined [@HipHopWestern](https://www.instagram.com/hiphopwestern/) (HHW)
+Like most things I end up trying, it started with friends. [Michael Yik](https://www.instagram.com/_michaelyik_/) had started a social group called [Westside Crew](https://instagram.com/West5ide.crew), and through that circle I found my way to [HipHopWestern](https://www.instagram.com/hiphopwestern/) (HHW) and its beginner rec team.
 
-I joined the beginner rec team during the 2022
+The first year, 2023/24, the team was led by Michael and [Henry Chen](https://instagram.com/henry.chenn), and we performed choreos to _Lil Boo Thang_, _Beware_, and _679_ ([showcase promo](https://www.instagram.com/p/C48PLg6Oasa/?img_index=2)).
 
-2023/2024 Beginner rec team led by [@Michael Yik](https://instagram.com/_michaelyik_) & [@Henry Chen](https://instagram.com/henry.chenn)—[Showcase Promo](https://www.instagram.com/p/C48PLg6Oasa/?img_index=2)
-Songs: Lil Boo Thang, Beware, 679
+The second year, 2024/25, Michael led again, this time with [Rachel Chen](https://instagram.com/rachel_chxn). Green was our colour, and we called ourselves the "Beginner Baddies", because we're bad af ;). That year it was _7 Days a Week_, _Water_, and _FYM_ ([showcase promo](https://www.instagram.com/p/DCm7Pkeh4i2/?img_index=1)).
 
-2024/2025 Beginner Rec team led by [@Micheal Yik](https://instagram.com/_michaelyik_) & [@Rachel Chen](https://instagram.com/rachel_chxn) [Showcase Promo](https://www.instagram.com/p/DCm7Pkeh4i2/?img_index=1)
-Green was our color scheme for this year.
-We were called "Beginner Baddies", because we're bad af ;).
-Songs: 7 days a week, water, fym
+## Dancing like a sports player
 
-I kind of wish I had participated more often and intently during dance/practice sessions.
-I regret not giving it more.
+You'd think someone who enjoys every sport would have decent coordination on a dance floor. I didn't. It was lowkey embarrassing at the start, and it took me a while to figure out why.
 
-Dance didn't really stick with me. Don't get me wrong, I genuinely enjoyed.
-A major part of dance is the social aspect. I found the social aspect to be so more rewarding than me actually dancing. It was fun learning new moves, but I don't think dance itself stuck. What stuck was the community, bonds, and memories.
+The coordination dance asks for is expressive and rhythm-based. Sports coordination is reactive and goal-oriented. In sports, every movement serves an objective, so it should be precise, efficient, and effective. Dance is mostly subjective. It's an art, after all.
 
-One thing I had difficulty getting over, and still find
+Whenever I moved, I felt like a stiff board next to everyone else. Looking back, I was trying to optimize my movements as if dance were a traditional sport, and it's hard to express anything with that mindset. I was still competing with myself, just in a different way than I was used to. What dance really asked of me was a kind of artistic vulnerability, and I didn't know how to give it yet. Maybe I just needed more time to find a style that felt like mine.
 
-Truth be told I never thought I would be good at dance. I'm not flexible, and it was lowkey embarassing at the start. You'd think that for someone who enjoys every sport, I would have good coordination when it comes to dancing. I learned that the expressive, rhythm-based coordination required to dance is vastly different from sports, which are usually reactive and goal-oriented.
+The team part was new too. I'm used to individual sports and to getting better on my own. I play badminton (I'm at three clubs in Scarborough these days), and for a long time my main event was singles, until I stopped playing competitively and switched to doubles. On a dance team you still put in your own reps, but the goal is to move together, and that's a different thing to practise for.
 
-In sports, every movement is meant to be objective oriented. Precise, efficient, and effective.
-Most of dance is subjective. It is an art, after all. Whenever I moved, I felt like a stiff board compared to others. I felt as if I was trying to optimize my movements as if Dance was a traditional sport. It's difficult to express art with that mindset. It was as if I was competing with myself, but in a different way than the sports I usually play. Artistic Vulnerability. Maybe I just didn't know how to express myself in this way properly, and just need more exposure to find what I like.
+## What actually stuck
 
-TBT I cared, and didn't care about how I looked at the same time.
+Dance itself didn't really stick with me. Don't get me wrong, I genuinely enjoyed it, and learning new moves was fun. But a huge part of dance is the social side, and I found that far more rewarding than the dancing.
 
-I met so many people through the dance community. Some of the most inspirational people I know (S/O Rachel) are incredible dancers.
+I met so many people through the dance community. Some of the most inspirational people I know are incredible dancers (shout out Rachel). A lot of the people I now count as good friends, like Henry, Mike, Rachel, Caity, and Danny, I bonded with in some way through it.
 
-As someone so accustomed to solo/individual sports.
+Honestly, it didn't have to be dance. It could have been any social thing. Dance just happened to be the one that brought us together, and what I kept from it was the community, the friendships, and the memories.
 
-I play badminton, my main event for a while was singles until i stopped playing competitively at clubs & started played doubles.
-I still play badminton at 3 clubs in Scarborough now (2026)
+## What I'd do differently
 
-, I'm so used to improving skills alone.
+My one real regret is that I didn't give it more. I wish I'd shown up more often and practised with more intent while I was still at school, where joining a beginner team was about as easy as it will ever be.
 
-I learned that although there are definitely levels to dance.
+## What I took from it
 
-My key takeaways:
-Love the community.
-Love the social aspect.
-Love learning & trying new things.
-Didn't think dancing suit me, but I still tried it (don't bash before trying type beat)
-A lot of the people that I've met and consider good friends I've bonded in some way through the dance community.
+The people are the best part. That's what I'll remember long after I've forgotten the choreos.
 
-- didnt have to be dance. could be socials, etc.
-- These people include Henry, Mike, Rachel, Caity, Danny, etc.
+It's worth trying things that don't seem like you. I didn't think dance suited me, and I tried it anyway. Don't knock it before you try it.
 
-Dance didn't stick, but memories, community, people did.
-I'm not writing it off, maybe just need to re-explore.
+Keep learning new things. Being a beginner again is uncomfortable, and that's the point.
 
-Drew parallels and noticed differences with sports.
-I think that a big part of dance, and any art, is mindset.
+Mindset matters, and it isn't the same everywhere. A big part of dance, and maybe any art, is mindset, and it's lowkey a different one from sports. Noticing where the two overlap and where they don't taught me something about how I approach both.
 
-- Different mindset than sports lowkey.
+Dance didn't stick, but the memories, the community, and the people did. I'm not writing it off, though. Maybe I just need to re-explore it.
