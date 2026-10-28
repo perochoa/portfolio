@@ -1,0 +1,779 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Perocho Brand Guide</title>
+<meta name="description" content="Master design and style reference for the Alexander Perocho brand: color, type, layout, components, voice, and tokens." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #fbfaf8;
+    --surface: #f3f1ed;
+    --text: #1c1a17;
+    --muted: #6b675f;
+    --border: #e5e1da;
+    --accent: #c2410c;
+    --accent-soft: rgba(194, 65, 12, 0.1);
+    --measure: 680px;
+    --wide: 960px;
+    --gutter: 1.25rem;
+    --radius: 10px;
+    --font-sans: "Geist", system-ui, sans-serif;
+    --font-mono: "Geist Mono", ui-monospace, monospace;
+    --font-serif: "Instrument Serif", Georgia, serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121110;
+      --surface: #1b1a18;
+      --text: #ece9e4;
+      --muted: #9b968d;
+      --border: #2b2926;
+      --accent: #fb8a4c;
+      --accent-soft: rgba(251, 138, 76, 0.12);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121110;
+    --surface: #1b1a18;
+    --text: #ece9e4;
+    --muted: #9b968d;
+    --border: #2b2926;
+    --accent: #fb8a4c;
+    --accent-soft: rgba(251, 138, 76, 0.12);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    overflow-wrap: break-word;
+  }
+  ::selection { background: var(--accent); color: var(--bg); }
+
+  header.top {
+    position: sticky; top: 0; z-index: 10;
+    border-bottom: 1px solid var(--border);
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
+    backdrop-filter: saturate(1.5) blur(10px);
+  }
+  header.top nav {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    max-width: calc(var(--wide) + 2 * var(--gutter));
+    height: 3.5rem; margin: 0 auto; padding: 0 var(--gutter);
+  }
+  .wordmark { font-weight: 600; letter-spacing: -0.02em; text-decoration: none; white-space: nowrap; }
+  .wordmark span { color: var(--accent); }
+  .toc { display: flex; gap: 1.25rem; font-size: 0.875rem; overflow-x: auto; }
+  .toc a { color: var(--muted); text-decoration: none; white-space: nowrap; }
+  .toc a:hover { color: var(--text); }
+  .theme-toggle {
+    font: inherit; font-size: 0.8rem; font-family: var(--font-mono);
+    color: var(--muted); background: var(--surface);
+    border: 1px solid var(--border); border-radius: 999px;
+    padding: 0.2em 0.8em; cursor: pointer;
+  }
+  .theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
+
+  main {
+    max-width: calc(var(--wide) + 2 * var(--gutter));
+    margin: 0 auto;
+    padding: 4rem var(--gutter) 5rem;
+  }
+  .narrow { max-width: var(--measure); }
+
+  h1, h2, h3, h4 { margin: 0 0 0.5em; font-weight: 600; line-height: 1.25; letter-spacing: -0.015em; }
+  h1 { font-size: 3rem; letter-spacing: -0.03em; line-height: 1.1; }
+  h1 .serif { color: var(--accent); font-size: 1.12em; padding-right: 0.04em; }
+  h3 { font-size: 1.075rem; margin-top: 2em; }
+  p, ul, ol, table, pre, blockquote { margin: 0 0 1.25em; }
+  ul, ol { padding-left: 1.25em; }
+  li { margin-bottom: 0.35em; }
+  li::marker { color: var(--muted); }
+  strong { font-weight: 600; }
+  a { color: inherit; text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 0.2em; transition: color .15s ease, text-decoration-thickness .15s ease; }
+  a:hover { color: var(--accent); text-decoration-thickness: 2px; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+  code, kbd, pre { font-family: var(--font-mono); font-size: 0.875em; }
+  :not(pre) > code { padding: 0.125em 0.375em; border: 1px solid var(--border); border-radius: 5px; background: var(--surface); }
+  pre { padding: 1rem 1.25rem; overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); line-height: 1.55; background: var(--surface); }
+  pre > code { font-size: 1em; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.925em; }
+  th, td { padding: 0.5em 0.75em; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+  th { font-weight: 600; }
+  blockquote { padding-left: 1em; border-left: 2px solid var(--accent); color: var(--muted); }
+  hr { margin: 2.5em 0; border: none; border-top: 1px solid var(--border); }
+
+  .mono { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.01em; color: var(--muted); }
+  .serif { font-family: var(--font-serif); font-weight: 400; font-style: italic; letter-spacing: -0.01em; }
+  .muted { color: var(--muted); }
+  .lede { font-size: 1.125rem; }
+
+  /* Section eyebrow heading, as on /experience */
+  section { margin-top: 4.5rem; scroll-margin-top: 4.5rem; }
+  section > h2 {
+    display: flex; align-items: center; gap: 0.75rem;
+    margin: 0 0 1.75rem;
+    font-size: 0.75rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  section > h2::after { content: ""; flex: 1; border-top: 1px solid var(--border); }
+  section > h2 .num { font-family: var(--font-mono); color: var(--accent); letter-spacing: 0; }
+
+  .status {
+    display: inline-flex; align-items: center; gap: 0.6em;
+    margin-bottom: 1.5rem; padding: 0.3em 0.8em;
+    border: 1px solid var(--border); border-radius: 999px; background: var(--surface);
+  }
+  .dot { width: 0.5em; height: 0.5em; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 0 rgba(34,197,94,.5); animation: pulse 2.4s ease-out infinite; }
+  @keyframes pulse { 70% { box-shadow: 0 0 0 .5em rgba(34,197,94,0); } 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); } }
+  @media (prefers-reduced-motion: reduce) { .dot { animation: none; } }
+
+  .grid { display: grid; gap: 1rem; }
+  .g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .card { border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; background: var(--bg); }
+  .card.surface { background: var(--surface); }
+  .card h3 { margin-top: 0; }
+  .card p:last-child, .card ul:last-child { margin-bottom: 0; }
+
+  /* Principles */
+  .principle strong { display: block; font-size: 1.05rem; margin-bottom: 0.25rem; letter-spacing: -0.015em; }
+  .principle span { display: block; font-size: 0.9rem; line-height: 1.5; color: var(--muted); }
+  .principle { border-top: 1px solid var(--border); padding-top: 1rem; }
+
+  /* Logo */
+  .logo-stage { display: flex; align-items: center; justify-content: center; min-height: 160px; border: 1px solid var(--border); border-radius: var(--radius); }
+  .logo-stage.light { background: #fbfaf8; color: #1c1a17; }
+  .logo-stage.dark { background: #121110; color: #ece9e4; }
+  .logo-stage.accent { background: #c2410c; color: #fbfaf8; }
+  .logo-stage .wm { font-size: 1.9rem; font-weight: 600; letter-spacing: -0.02em; }
+  .logo-stage.light .wm span { color: #c2410c; }
+  .logo-stage.dark .wm span { color: #fb8a4c; }
+  .logo-stage.accent .wm span { color: #1c1a17; }
+  .monogram { display: inline-flex; align-items: center; justify-content: center; width: 96px; height: 96px; border-radius: 22%; background: #c2410c; color: #fbfaf8; font-family: var(--font-serif); font-style: italic; font-size: 54px; line-height: 1; padding-bottom: 6px; }
+  .monogram.sm { width: 40px; height: 40px; font-size: 23px; padding-bottom: 3px; }
+  .caption { margin-top: 0.6rem; }
+
+  /* Swatches */
+  .swatch { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--bg); }
+  .swatch .chip-color { height: 88px; border-bottom: 1px solid var(--border); }
+  .swatch .meta { padding: 0.75rem 0.9rem; }
+  .swatch .name { font-weight: 600; font-size: 0.95rem; }
+  .swatch .hex { display: block; font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); }
+  .swatch .use { display: block; font-size: 0.8rem; line-height: 1.45; color: var(--muted); margin-top: 0.35rem; }
+  .palette-label { margin: 2rem 0 0.75rem; }
+  .ratio-ok { color: #15803d; font-family: var(--font-mono); font-size: 0.8rem; }
+  .ratio-warn { color: var(--accent); font-family: var(--font-mono); font-size: 0.8rem; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .ratio-ok { color: #4ade80; } }
+  :root[data-theme="dark"] .ratio-ok { color: #4ade80; }
+
+  .proportion { display: flex; height: 44px; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); }
+  .proportion div { display: flex; align-items: center; padding: 0 0.6rem; font-family: var(--font-mono); font-size: 0.72rem; white-space: nowrap; overflow: hidden; }
+
+  /* Type */
+  .type-row { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 1.5rem; align-items: baseline; padding: 1.1rem 0; border-bottom: 1px solid var(--border); }
+  .type-row:first-of-type { border-top: 1px solid var(--border); }
+  .type-row .spec { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); line-height: 1.5; }
+  .family { padding: 1.5rem; }
+  .family .big { font-size: 3.25rem; line-height: 1.05; margin-bottom: 0.75rem; letter-spacing: -0.03em; }
+  .family .glyphs { font-size: 0.95rem; color: var(--muted); line-height: 1.5; word-break: break-all; }
+
+  /* Components */
+  .actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0; padding: 0; list-style: none; }
+  .actions li { margin: 0; }
+  .button { display: inline-flex; align-items: center; gap: 0.4em; padding: 0.5em 1em; border: 1px solid var(--border); border-radius: 8px; font-size: 0.925rem; font-weight: 500; text-decoration: none; transition: border-color .15s ease, background .15s ease; }
+  .button:hover { border-color: var(--accent); color: var(--accent); }
+  .button.primary { border-color: var(--text); background: var(--text); color: var(--bg); }
+  .button.primary:hover { border-color: var(--accent); background: var(--accent); color: var(--bg); }
+  .button.primary span { transition: transform .15s ease; }
+  .button.primary:hover span { transform: translateX(3px); }
+  .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .chip { padding: 0.15rem 0.6rem; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); font-family: var(--font-mono); font-size: 0.775rem; }
+  .badge { display: inline-block; padding: 0.15em 0.6em; border-radius: 4px; background: var(--accent-soft); color: var(--accent); font-family: var(--font-mono); font-size: 0.8rem; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 0; padding: 0; list-style: none; }
+  .stats li { margin: 0; padding-top: 1rem; border-top: 1px solid var(--border); }
+  .stats strong { display: block; margin-bottom: 0.25rem; font-size: 1.75rem; font-weight: 600; letter-spacing: -0.03em; line-height: 1.2; }
+  .stats small { font-size: 0.55em; font-weight: 400; color: var(--muted); letter-spacing: 0; }
+  .stats span { display: block; font-size: 0.85rem; line-height: 1.45; color: var(--muted); }
+  .posts { margin: 0; padding: 0; list-style: none; }
+  .posts li { margin: 0; border-bottom: 1px solid var(--border); }
+  .posts a { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding: 0.9rem 0; text-decoration: none; }
+  .posts a:hover .title { color: var(--accent); }
+  .roles { margin: 0; padding: 0; list-style: none; }
+  .role { position: relative; margin: 0; padding: 0 0 1.25rem 1.5rem; border-left: 1px solid var(--border); }
+  .role:last-child { padding-bottom: 0; }
+  .role::before { content: ""; position: absolute; top: 0.5em; left: -5px; width: 9px; height: 9px; border: 2px solid var(--accent); border-radius: 50%; background: var(--bg); }
+  .role:first-child::before { background: var(--accent); }
+  .role h4 { margin: 0; font-size: 1rem; font-weight: 500; }
+  .demo-label { margin-bottom: 0.75rem; display: block; }
+
+  /* Do / don't */
+  .do, .dont { border-top: 2px solid; padding-top: 0.75rem; }
+  .do { border-color: #15803d; }
+  .dont { border-color: var(--accent); }
+  .do h3, .dont h3 { margin-top: 0; font-size: 0.95rem; }
+  .do ul, .dont ul { font-size: 0.925rem; margin: 0; }
+
+  .spacing-bar { display: flex; align-items: center; gap: 1rem; padding: 0.35rem 0; font-size: 0.85rem; }
+  .spacing-bar .bar { height: 12px; background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 3px; }
+  .spacing-bar .mono { width: 7.5rem; flex-shrink: 0; }
+
+  footer.bottom { border-top: 1px solid var(--border); }
+  footer.bottom .inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; max-width: calc(var(--wide) + 2 * var(--gutter)); margin: 0 auto; padding: 1.75rem var(--gutter); }
+
+  @media (max-width: 860px) {
+    .g4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .g3 { grid-template-columns: 1fr; }
+    .toc { display: none; }
+  }
+  @media (max-width: 720px) {
+    body { font-size: 16px; }
+    main { padding-top: 2.5rem; }
+    h1 { font-size: 2.4rem; }
+    .g2 { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: 1fr; gap: 1rem; }
+    .type-row { grid-template-columns: 1fr; gap: 0.4rem; }
+    .posts a { flex-direction: column; gap: 0.1rem; }
+  }
+  @media (max-width: 420px) {
+    .g4 { grid-template-columns: 1fr; }
+  }
+  @media print {
+    header.top { position: static; }
+    .theme-toggle, .toc { display: none; }
+    section { break-inside: avoid-page; }
+    .card, .swatch, pre { break-inside: avoid; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <nav>
+    <span class="wordmark">Alex Perocho<span aria-hidden="true">.</span></span>
+    <div class="toc">
+      <a href="#principles">Principles</a>
+      <a href="#logo">Logo</a>
+      <a href="#color">Color</a>
+      <a href="#type">Type</a>
+      <a href="#layout">Layout</a>
+      <a href="#components">Components</a>
+      <a href="#voice">Voice</a>
+      <a href="#applying">Applying</a>
+      <a href="#tokens">Tokens</a>
+    </div>
+    <button class="theme-toggle" type="button" id="theme-toggle">theme: auto</button>
+  </nav>
+</header>
+
+<main>
+  <div class="narrow">
+    <p class="status mono"><span class="dot" aria-hidden="true"></span>Brand guide · v1.0 · Oct 27, 2026</p>
+    <h1>Design &amp; style, <span class="serif">master</span>.</h1>
+    <p class="lede">The single reference for how the Alexander Perocho brand looks, reads and behaves. It is taken directly from perocho.com, which is the canonical implementation. Use it for slides, résumés, social posts, documents, side-project sites and anything else that carries the name.</p>
+    <p class="muted">If this guide and the site ever disagree, the site wins: update this guide from <code>src/styles/global.css</code>.</p>
+  </div>
+
+  <!-- ───────────────────────── 01 Principles ───────────────────────── -->
+  <section id="principles">
+    <h2><span class="num">01</span> Brand principles</h2>
+    <div class="grid g4">
+      <div class="principle"><strong>Warm, not sterile</strong><span>Off-white paper and warm near-black instead of pure #fff/#000. Every neutral leans slightly warm.</span></div>
+      <div class="principle"><strong>One accent</strong><span>Burnt orange is the only brand color. It marks what matters: links, the active state, the signature word.</span></div>
+      <div class="principle"><strong>Quiet structure</strong><span>Hairline borders and whitespace do the work. No shadows, gradients or heavy fills.</span></div>
+      <div class="principle"><strong>Engineer’s precision</strong><span>Monospace for data and metadata, exact numbers, plain sentences. One italic serif word for a human touch.</span></div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── 02 Logo ───────────────────────── -->
+  <section id="logo">
+    <h2><span class="num">02</span> Logo &amp; wordmark</h2>
+    <div class="grid g3">
+      <div>
+        <div class="logo-stage light"><span class="wm">Alex Perocho<span>.</span></span></div>
+        <p class="caption mono">Wordmark · light</p>
+      </div>
+      <div>
+        <div class="logo-stage dark"><span class="wm">Alex Perocho<span>.</span></span></div>
+        <p class="caption mono">Wordmark · dark</p>
+      </div>
+      <div>
+        <div class="logo-stage light"><span class="monogram">ap</span></div>
+        <p class="caption mono">Monogram · favicon / avatar</p>
+      </div>
+    </div>
+    <div class="grid g2" style="margin-top:1.5rem">
+      <div>
+        <h3>Wordmark</h3>
+        <ul>
+          <li>Text “Alex Perocho” followed by a period in the accent color. The period is part of the mark; never drop it or recolor it to match the text.</li>
+          <li>Geist SemiBold (600), letter-spacing −0.02em, set on one line.</li>
+          <li>Use the full legal name “Alexander Perocho” in formal contexts (copyright lines, résumé header, page titles); the wordmark stays “Alex Perocho.”</li>
+          <li>On an accent background, the period switches to the text color (<code>#1c1a17</code>).</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Monogram</h3>
+        <ul>
+          <li>Lowercase “ap” in Instrument Serif Italic, <code>#fbfaf8</code> on <code>#c2410c</code>.</li>
+          <li>Rounded square, corner radius ≈ 22% of the side (14 / 64).</li>
+          <li>Use for favicons, app icons, social avatars where a photo doesn’t fit, and small sign-offs.</li>
+          <li>Minimum size 16 px. Keep clear space of at least 25% of the side on every edge.</li>
+        </ul>
+        <p style="display:flex;align-items:center;gap:.75rem"><span class="monogram sm">ap</span><span class="mono">40 px</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── 03 Color ───────────────────────── -->
+  <section id="color">
+    <h2><span class="num">03</span> Color</h2>
+    <p class="narrow">Six roles, each with a light and a dark value. Always design with the <strong>role</strong> (e.g. “muted”), not the hex, so both modes stay in step. Light mode is the default for print and documents; dark mode follows the viewer’s system setting on screens.</p>
+
+    <p class="palette-label mono">Light mode (default)</p>
+    <div class="grid g3">
+      <div class="swatch"><div class="chip-color" style="background:#fbfaf8"></div><div class="meta"><span class="name">Background</span><span class="hex">--bg · #fbfaf8 · rgb 251 250 248</span><span class="use">Page / canvas. Warm paper white.</span></div></div>
+      <div class="swatch"><div class="chip-color" style="background:#f3f1ed"></div><div class="meta"><span class="name">Surface</span><span class="hex">--surface · #f3f1ed · rgb 243 241 237</span><span class="use">Chips, inline code, pills, image wells.</span></div></div>
+      <div class="swatch"><div class="chip-color" style="background:#e5e1da"></div><div class="meta"><span class="name">Border</span><span class="hex">--border · #e5e1da · rgb 229 225 218</span><span class="use">1 px hairlines, dividers, outlines. Never for text.</span></div></div>
+      <div class="swatch"><div class="chip-color" style="background:#1c1a17"></div><div class="meta"><span class="name">Text</span><span class="hex">--text · #1c1a17 · rgb 28 26 23</span><span class="use">Body copy, headings, primary button fill.</span></div></div>
+      <div class="swatch"><div class="chip-color" style="background:#6b675f"></div><div class="meta"><span class="name">Muted</span><span class="hex">--muted · #6b675f · rgb 107 103 95</span><span class="use">Secondary text, metadata, nav links, captions.</span></div></div>
+      <div class="swatch"><div class="chip-color" style="background:#c2410c"></div><div class="meta"><span class="name">Accent · Burnt orange</span><span class="hex">--accent · #c2410c · rgb 194 65 12</span><span class="use">Links, hover, focus, active state, signature word.</span></div></div>
+    </div>
+
+    <p class="palette-label mono">Dark mode</p>
+    <div class="grid g3">
+      <div class="swatch"><div class="chip-color" style="background:#121110"></div><div class="meta"><span class="name">Background</span><span class="hex">--bg · #121110 · rgb 18 17 16</span><span class="use">Warm near-black, not pure black.</span></div></div>
+      <div class="swatch"><div class="chip-color" style="background:#1b1a18"></div><div class="meta"><span class="name">Surface</span><span class="hex">--surface · #1b1a18 · rgb 27 26 24</span><span class="use">Raised areas, chips, code.</span></div></div>
+      <div class="swatch"><div class="chip-color" style="background:#2b2926"></div><div class="meta"><span class="name">Border</span><span class="hex">--border · #2b2926 · rgb 43 41 38</span><span class="use">Hairlines and dividers.</span></div></div>
+      <div class="swatch"><div class="chip-color" style="background:#ece9e4"></div><div class="meta"><span class="name">Text</span><span class="hex">--text · #ece9e4 · rgb 236 233 228</span><span class="use">Warm off-white body copy.</span></div></div>
+      <div class="swatch"><div class="chip-color" style="background:#9b968d"></div><div class="meta"><span class="name">Muted</span><span class="hex">--muted · #9b968d · rgb 155 150 141</span><span class="use">Secondary text and metadata.</span></div></div>
+      <div class="swatch"><div class="chip-color" style="background:#fb8a4c"></div><div class="meta"><span class="name">Accent · Ember</span><span class="hex">--accent · #fb8a4c · rgb 251 138 76</span><span class="use">Lighter orange tuned for dark backgrounds.</span></div></div>
+    </div>
+
+    <div class="grid g2" style="margin-top:1.5rem">
+      <div class="card surface">
+        <h3>Supporting values</h3>
+        <ul>
+          <li><strong>Accent soft</strong> <code>--accent-soft</code>: accent at 10% opacity (light, <code>rgba(194,65,12,.10)</code>) / 12% (dark, <code>rgba(251,138,76,.12)</code>). Background for badges and highlights only, with accent-colored text on top.</li>
+          <li><strong>Status green</strong> <code>#22c55e</code>: only for the “available / live” pulsing dot. Not a brand color; never use it for text.</li>
+          <li><strong>Selection</strong>: accent background with bg-colored text.</li>
+          <li><strong>Header glass</strong>: bg at 85% opacity, <code>backdrop-filter: saturate(1.5) blur(10px)</code>.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Proportion</h3>
+        <p class="muted" style="font-size:.9rem">Roughly how much of any layout each role should occupy. Accent is a seasoning.</p>
+        <div class="proportion" aria-hidden="true">
+          <div style="flex:60;background:var(--bg);color:var(--muted)">bg 60%</div>
+          <div style="flex:15;background:var(--surface);color:var(--muted);border-left:1px solid var(--border)">surface</div>
+          <div style="flex:17;background:var(--text);color:var(--bg)">text</div>
+          <div style="flex:5;background:var(--muted)"></div>
+          <div style="flex:3;background:var(--accent)"></div>
+        </div>
+        <p class="mono" style="margin:.5rem 0 0">bg ≈ 60 · surface ≈ 15 · text ≈ 17 · muted ≈ 5 · accent ≤ 3</p>
+      </div>
+    </div>
+
+    <h3>Contrast (WCAG 2.x)</h3>
+    <table>
+      <thead><tr><th>Pair</th><th>Light</th><th>Dark</th><th>Allowed for</th></tr></thead>
+      <tbody>
+        <tr><td>Text on bg</td><td><span class="ratio-ok">16.6 : 1</span></td><td><span class="ratio-ok">15.6 : 1</span></td><td>Everything</td></tr>
+        <tr><td>Muted on bg</td><td><span class="ratio-ok">5.4 : 1</span></td><td><span class="ratio-ok">6.4 : 1</span></td><td>Body-size secondary text</td></tr>
+        <tr><td>Muted on surface</td><td><span class="ratio-ok">5.0 : 1</span></td><td><span class="ratio-ok">5.9 : 1</span></td><td>Body-size secondary text</td></tr>
+        <tr><td>Accent on bg</td><td><span class="ratio-ok">5.0 : 1</span></td><td><span class="ratio-ok">7.9 : 1</span></td><td>Links, labels, large or bold text</td></tr>
+        <tr><td>Bg on accent (button / monogram)</td><td><span class="ratio-ok">5.0 : 1</span></td><td><span class="ratio-ok">7.9 : 1</span></td><td>Button labels, ≥ 14 px</td></tr>
+        <tr><td>Accent on surface</td><td><span class="ratio-warn">4.6 : 1</span></td><td><span class="ratio-ok">7.3 : 1</span></td><td>OK, but near the AA limit in light mode; avoid small accent text on surface</td></tr>
+        <tr><td>Border on bg</td><td><span class="ratio-warn">1.25 : 1</span></td><td><span class="ratio-warn">1.3 : 1</span></td><td>Decorative lines only, never text or icons</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ───────────────────────── 04 Typography ───────────────────────── -->
+  <section id="type">
+    <h2><span class="num">04</span> Typography</h2>
+    <div class="grid g3">
+      <div class="card family">
+        <div class="big" style="font-family:var(--font-sans);font-weight:600">Aa</div>
+        <strong>Geist</strong> <span class="mono">· sans · primary</span>
+        <p class="muted" style="font-size:.9rem;margin:.5rem 0">Variable 300–700. Headings, body, UI. Fallback: system-ui, sans-serif.</p>
+        <div class="glyphs" style="font-family:var(--font-sans)">ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789</div>
+      </div>
+      <div class="card family">
+        <div class="big" style="font-family:var(--font-mono);font-weight:400;letter-spacing:0">Aa</div>
+        <strong>Geist Mono</strong> <span class="mono">· mono · data</span>
+        <p class="muted" style="font-size:.9rem;margin:.5rem 0">400 and 500. Dates, metadata, eyebrows, chips, code. Fallback: ui-monospace, monospace.</p>
+        <div class="glyphs" style="font-family:var(--font-mono)">ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789</div>
+      </div>
+      <div class="card family">
+        <div class="big serif" style="color:var(--accent);letter-spacing:-0.01em">Aa</div>
+        <strong>Instrument Serif</strong> <span class="mono">· serif · accent</span>
+        <p class="muted" style="font-size:.9rem;margin:.5rem 0">Italic 400 only. One signature word per headline, in accent. Fallback: Georgia, serif.</p>
+        <div class="glyphs serif" style="font-size:1.1rem">ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789</div>
+      </div>
+    </div>
+
+    <h3>Type scale</h3>
+    <p class="muted">Base size 17 px (16 px under 720 px wide). All headings are Geist 600 with negative tracking; the larger the size, the tighter.</p>
+    <div class="type-row"><div class="spec">Display<br>48 px · 3rem · 600<br>lh 1.1 · ls −0.03em</div><div style="font-size:3rem;font-weight:600;letter-spacing:-0.03em;line-height:1.1">Hi, I’m <span class="serif" style="color:var(--accent);font-size:1.12em">Alex</span>.</div></div>
+    <div class="type-row"><div class="spec">H1 (page / post title)<br>36 px · 2.25rem · 600<br>lh 1.1 · ls −0.03em</div><div style="font-size:2.25rem;font-weight:600;letter-spacing:-0.03em;line-height:1.1">When Terraform Wants to Replace Every Node at Once</div></div>
+    <div class="type-row"><div class="spec">H2<br>22 px · 1.3rem · 600<br>lh 1.25 · ls −0.015em</div><div style="font-size:1.3rem;font-weight:600;letter-spacing:-0.015em;line-height:1.25">Reason 1: retention switched on, with no period</div></div>
+    <div class="type-row"><div class="spec">H3<br>18 px · 1.075rem · 600</div><div style="font-size:1.075rem;font-weight:600;letter-spacing:-0.015em">Reading the plan before applying it</div></div>
+    <div class="type-row"><div class="spec">Eyebrow<br>12 px · 0.75rem · 500<br>uppercase · ls 0.12em</div><div style="font-size:.75rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase">Work experience</div></div>
+    <div class="type-row"><div class="spec">Lede<br>19 px · 1.125rem · 400</div><div class="lede" style="margin:0">I build the infrastructure that gets machine learning models from training into production.</div></div>
+    <div class="type-row"><div class="spec">Body<br>17 px · 400 · lh 1.65</div><div>Day to day that means Kubernetes, NVIDIA Triton, Prometheus and Grafana, and a lot of Helm and Terraform.</div></div>
+    <div class="type-row"><div class="spec">Mono label<br>13.6 px · 0.8rem · 400<br>ls 0.01em · muted</div><div class="mono">Oct 19, 2026 · updated Oct 27, 2026</div></div>
+
+    <div class="grid g2" style="margin-top:1.5rem">
+      <div>
+        <h3>Rules</h3>
+        <ul>
+          <li>Weights in use: 400 body, 500 buttons/sub-roles/eyebrows, 600 headings and emphasis. Nothing heavier.</li>
+          <li>The serif appears <strong>once</strong> per view, italic, in accent, at 1.12× the surrounding size. Usually a name or a single key word.</li>
+          <li>Reading width (measure) is 680 px, about 70 characters.</li>
+          <li>Dates are written <code>Mon D, YYYY</code> (e.g. “Oct 19, 2026”) and set in mono.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Substitutes</h3>
+        <p class="muted" style="font-size:.95rem">All three families are free on Google Fonts. Where custom fonts are unavailable (email, some office tools):</p>
+        <table>
+          <tbody>
+            <tr><td>Geist</td><td>Inter → Helvetica Neue → Arial</td></tr>
+            <tr><td>Geist Mono</td><td>JetBrains Mono → Menlo → Consolas</td></tr>
+            <tr><td>Instrument Serif</td><td>Georgia Italic</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── 05 Layout ───────────────────────── -->
+  <section id="layout">
+    <h2><span class="num">05</span> Layout, spacing &amp; shape</h2>
+    <div class="grid g2">
+      <div>
+        <h3 style="margin-top:0">Widths</h3>
+        <table>
+          <tbody>
+            <tr><td><code>--measure</code></td><td>680 px</td><td class="muted">Reading column for all page content</td></tr>
+            <tr><td><code>--wide</code></td><td>960 px</td><td class="muted">Header and footer bars</td></tr>
+            <tr><td><code>--gutter</code></td><td>20 px · 1.25rem</td><td class="muted">Side padding on every viewport</td></tr>
+            <tr><td>Header height</td><td>56 px · 3.5rem</td><td class="muted">Sticky, hairline bottom border</td></tr>
+          </tbody>
+        </table>
+        <h3>Shape</h3>
+        <table>
+          <tbody>
+            <tr><td><code>--radius</code></td><td>10 px</td><td class="muted">Images, code blocks, cards</td></tr>
+            <tr><td>Button</td><td>8 px</td><td class="muted">All buttons</td></tr>
+            <tr><td>Chip</td><td>6 px</td><td class="muted">Skill / tag chips</td></tr>
+            <tr><td>Inline code</td><td>5 px</td><td class="muted"></td></tr>
+            <tr><td>Badge</td><td>4 px</td><td class="muted">Draft / status badges</td></tr>
+            <tr><td>Pill</td><td>999 px</td><td class="muted">Status pill; avatars are circles</td></tr>
+          </tbody>
+        </table>
+        <p class="muted" style="font-size:.95rem">Borders are always 1 px solid <code>--border</code>. Accent strokes (blockquote rule, active underline, focus ring) are 2 px. <strong>No drop shadows.</strong></p>
+      </div>
+      <div>
+        <h3 style="margin-top:0">Vertical rhythm</h3>
+        <div class="spacing-bar"><span class="mono">0.5 rem · 8</span><div class="bar" style="width:8px"></div><span class="muted">heading bottom margin</span></div>
+        <div class="spacing-bar"><span class="mono">1 rem · 16</span><div class="bar" style="width:16px"></div><span class="muted">grid gaps, card padding</span></div>
+        <div class="spacing-bar"><span class="mono">1.25 em · 20</span><div class="bar" style="width:20px"></div><span class="muted">paragraph spacing</span></div>
+        <div class="spacing-bar"><span class="mono">2 rem · 32</span><div class="bar" style="width:32px"></div><span class="muted">header → content</span></div>
+        <div class="spacing-bar"><span class="mono">2.5 em · 40</span><div class="bar" style="width:40px"></div><span class="muted">before H2, around hr</span></div>
+        <div class="spacing-bar"><span class="mono">3.5 rem · 56</span><div class="bar" style="width:56px"></div><span class="muted">between page sections</span></div>
+        <div class="spacing-bar"><span class="mono">4 rem · 64</span><div class="bar" style="width:64px"></div><span class="muted">page top padding</span></div>
+        <div class="spacing-bar"><span class="mono">5 rem · 80</span><div class="bar" style="width:80px"></div><span class="muted">page bottom / hero top</span></div>
+        <h3>Breakpoints</h3>
+        <ul>
+          <li><strong>≤ 720 px</strong>: body 16 px, H1 30 px (display 38 px), grids collapse to one column, list rows stack.</li>
+          <li><strong>≤ 560 px</strong>: hero avatar stacks above text.</li>
+          <li><strong>≤ 480 px</strong>: nav gap tightens to 1 rem.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── 06 Components ───────────────────────── -->
+  <section id="components">
+    <h2><span class="num">06</span> Components</h2>
+    <div class="grid g2">
+      <div class="card">
+        <span class="demo-label mono">Buttons</span>
+        <ul class="actions">
+          <li><a class="button primary" href="#components">Experience <span aria-hidden="true">&rarr;</span></a></li>
+          <li><a class="button" href="#components">GitHub</a></li>
+          <li><a class="button" href="#components">Email</a></li>
+        </ul>
+        <p class="muted" style="font-size:.875rem;margin:1rem 0 0">Primary: text-colored fill, bg-colored label, turns accent on hover and nudges its arrow 3 px right. Secondary: hairline outline, border and label turn accent on hover. One primary per group.</p>
+      </div>
+      <div class="card">
+        <span class="demo-label mono">Links &amp; navigation</span>
+        <p style="margin:0 0 .75rem">Read the <a href="#components">full write-up</a> on retention.</p>
+        <p style="margin:0;display:flex;gap:1.5rem;font-size:.925rem">
+          <a href="#components" style="color:var(--muted);text-decoration:none">Experience</a>
+          <a href="#components" style="color:var(--text);text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:.45em">Blog</a>
+          <a href="#components" style="color:var(--muted);text-decoration:none">About</a>
+        </p>
+        <p class="muted" style="font-size:.875rem;margin:1rem 0 0">Inline links keep the text color with a 1 px accent underline (offset 0.2em); on hover the text turns accent and the underline 2 px. Nav links are muted; the active one is text-colored with a 2 px accent underline.</p>
+      </div>
+      <div class="card">
+        <span class="demo-label mono">Status pill · badge · chips</span>
+        <p class="status mono" style="margin-bottom:1rem"><span class="dot" aria-hidden="true"></span>ML Platform Engineer at Mobility Global</p>
+        <p style="margin:0 0 1rem"><span class="badge">Draft: only visible in astro dev</span></p>
+        <div class="chips"><span class="chip">Kubernetes</span><span class="chip">NVIDIA Triton</span><span class="chip">Terraform</span><span class="chip">Prometheus</span></div>
+      </div>
+      <div class="card">
+        <span class="demo-label mono">Timeline</span>
+        <ul class="roles">
+          <li class="role"><h4>ML Platform Engineer (Associate, Part-Time)</h4><span class="mono">Sep 2026 – Present</span></li>
+          <li class="role"><h4>ML Platform Engineer Intern</h4><span class="mono">May 2026 – Aug 2026</span></li>
+        </ul>
+        <p class="muted" style="font-size:.875rem;margin:1rem 0 0">Hairline rail with 9 px accent rings; the current item is filled.</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:1rem">
+      <span class="demo-label mono">Stats row</span>
+      <ul class="stats">
+        <li><strong>20+</strong><span>production Triton model deployments supported</span></li>
+        <li><strong>6</strong><span>EKS clusters across 2 AWS regions</span></li>
+        <li><strong>$66K<small>/yr</small></strong><span>platform spend cut by trimming observability overhead</span></li>
+      </ul>
+    </div>
+
+    <div class="grid g2" style="margin-top:1rem">
+      <div class="card">
+        <span class="demo-label mono">List rows</span>
+        <ul class="posts">
+          <li><a href="#components"><span class="title">retention_enabled: true Doesn’t Delete Anything</span><span class="mono">Oct 19, 2026</span></a></li>
+          <li><a href="#components"><span class="title">When Terraform Wants to Replace Every Node at Once</span><span class="mono">Oct 19, 2026</span></a></li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="demo-label mono">Code &amp; quote</span>
+<pre><code>limits_config:
+  retention_period: 0s  # never deletes</code></pre>
+        <blockquote style="margin:0">Blockquotes get a 2 px accent rule and muted text.</blockquote>
+      </div>
+    </div>
+
+    <div class="grid g2" style="margin-top:1rem">
+      <div>
+        <h3>Imagery</h3>
+        <ul>
+          <li>Images get the 10 px radius and a 1 px border; hero images sit in a surface-colored well, max 420 px tall, <code>object-fit: contain</code>.</li>
+          <li>Portraits are circular with a 1 px border, tilted −3°, rotating to +3° and 1.04× on hover.</li>
+          <li>Prefer real photos and real screenshots over stock or illustration. Warm, natural light suits the palette.</li>
+          <li>Icons: simple 16-unit glyphs at 18 px, <code>currentColor</code>, muted by default and accent on hover.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Motion</h3>
+        <ul>
+          <li>Default transition: <strong>0.15 s ease</strong> on color, border, background and underline thickness.</li>
+          <li>Portrait: 0.3 s ease. Status dot pulse: 2.4 s ease-out, infinite.</li>
+          <li>Movement is small: 3 px arrow nudge, 3° tilt. Nothing slides in or bounces.</li>
+          <li>Respect <code>prefers-reduced-motion</code>: stop looping animations.</li>
+          <li>Focus: 2 px accent outline, 2 px offset, on every interactive element.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── 07 Voice ───────────────────────── -->
+  <section id="voice">
+    <h2><span class="num">07</span> Voice &amp; writing</h2>
+    <div class="grid g2">
+      <div>
+        <ul>
+          <li><strong>First person, conversational, specific.</strong> “I build the infrastructure that gets machine learning models from training into production and keeps them healthy once they’re there.”</li>
+          <li><strong>Lead with the answer.</strong> Post descriptions state the finding: “The answer was forever, for three separate reasons.”</li>
+          <li><strong>Real numbers over adjectives.</strong> “6 EKS clusters across 2 AWS regions”, “$66K/yr”, not “many” or “significant”.</li>
+          <li><strong>Name the tools.</strong> Kubernetes, Triton, Prometheus, Helm, Terraform, written with their official casing.</li>
+        </ul>
+      </div>
+      <div>
+        <ul>
+          <li><strong>Sentence case</strong> for section headings, buttons and UI labels (“Recent writing”, “All posts →”). <strong>Title Case</strong> for blog post titles (“When Terraform Wants to Replace Every Node at Once”). Uppercase only for eyebrow labels.</li>
+          <li>Use colons and plain sentences for asides; avoid em-dash-heavy prose.</li>
+          <li>Arrows (→ ←) for directional links, middots (·) to separate metadata.</li>
+          <li>Tone: candid and a little self-deprecating about mistakes, never hype. No “passionate”, “rockstar”, “leveraging synergies”.</li>
+        </ul>
+        <blockquote>Hi, I’m Alex. → Experience · GitHub · LinkedIn · Email</blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── 08 Applying ───────────────────────── -->
+  <section id="applying">
+    <h2><span class="num">08</span> Applying the brand</h2>
+    <div class="grid g2">
+      <div class="card">
+        <h3>Slides &amp; presentations</h3>
+        <ul>
+          <li>Light bg <code>#fbfaf8</code> by default; dark <code>#121110</code> for evening talks or demos.</li>
+          <li>Title: Geist 600, −0.03em, with one serif accent word. Small mono eyebrow above (section name or date).</li>
+          <li>Big numbers styled like the stats row. Code in Geist Mono on surface with a hairline border.</li>
+          <li>Monogram bottom-left on content slides; wordmark on the title and closing slides.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Résumé &amp; documents</h3>
+        <ul>
+          <li>Always light mode. Name in Geist 600, contact line in mono, muted.</li>
+          <li>Section headings as uppercase eyebrows with a trailing hairline (like “01 Brand principles” above).</li>
+          <li>Accent only for the name’s period, links and timeline markers. Body text stays <code>#1c1a17</code>.</li>
+          <li>Skills as chips or a mono comma list. Dates right-aligned in mono.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Social &amp; thumbnails</h3>
+        <ul>
+          <li>OG / link images: 1200 × 630, bg or surface fill, post title in Geist 600, date in mono, wordmark bottom-left.</li>
+          <li>Accent-filled cards are allowed for announcements: <code>#c2410c</code> background, <code>#fbfaf8</code> text, still one serif word.</li>
+          <li>Avatar: the portrait photo; fall back to the monogram.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Code, terminals &amp; side projects</h3>
+        <ul>
+          <li>Syntax themes: GitHub Light / GitHub Dark (what the site uses via Shiki).</li>
+          <li>New sites: copy the tokens below verbatim, support <code>prefers-color-scheme</code>, no client JS unless it earns its place.</li>
+          <li>Set <code>theme-color</code> meta to <code>#fbfaf8</code> / <code>#121110</code>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="grid g2" style="margin-top:2rem">
+      <div class="do">
+        <h3>Do</h3>
+        <ul>
+          <li>Use role tokens, and test both light and dark.</li>
+          <li>Keep accent under ~3% of the area.</li>
+          <li>Separate with whitespace and 1 px hairlines.</li>
+          <li>Put dates, versions and metadata in mono.</li>
+          <li>Keep text in the 680 px reading column.</li>
+        </ul>
+      </div>
+      <div class="dont">
+        <h3>Don’t</h3>
+        <ul>
+          <li>Introduce a second brand color, gradients or drop shadows.</li>
+          <li>Use pure <code>#ffffff</code> or <code>#000000</code>.</li>
+          <li>Use the serif for body text or more than once per view.</li>
+          <li>Use the light accent on dark bg, or vice versa.</li>
+          <li>Set text in <code>--border</code>, or weights above 600.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── 09 Tokens ───────────────────────── -->
+  <section id="tokens">
+    <h2><span class="num">09</span> Design tokens</h2>
+    <p class="narrow">Copy-paste source of truth. CSS matches <code>src/styles/global.css</code> on perocho.com.</p>
+    <h3>CSS</h3>
+<pre><code>/* Fonts: Google Fonts → Geist (300–700), Geist Mono (400, 500), Instrument Serif (400, italic) */
+:root {
+  color-scheme: light dark;
+
+  --bg: #fbfaf8;
+  --surface: #f3f1ed;
+  --text: #1c1a17;
+  --muted: #6b675f;
+  --border: #e5e1da;
+  --accent: #c2410c;
+  --accent-soft: rgba(194, 65, 12, 0.1);
+
+  --measure: 680px;
+  --wide: 960px;
+  --gutter: 1.25rem;
+  --radius: 10px;
+
+  --font-sans: "Geist", system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+  --font-serif: "Instrument Serif", Georgia, serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121110;
+    --surface: #1b1a18;
+    --text: #ece9e4;
+    --muted: #9b968d;
+    --border: #2b2926;
+    --accent: #fb8a4c;
+    --accent-soft: rgba(251, 138, 76, 0.12);
+  }
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 400 17px/1.65 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}</code></pre>
+    <h3>JSON (Figma, Tailwind, Tokens Studio)</h3>
+<pre><code>{
+  "color": {
+    "light": { "bg": "#fbfaf8", "surface": "#f3f1ed", "text": "#1c1a17", "muted": "#6b675f", "border": "#e5e1da", "accent": "#c2410c", "accentSoft": "rgba(194,65,12,0.10)" },
+    "dark":  { "bg": "#121110", "surface": "#1b1a18", "text": "#ece9e4", "muted": "#9b968d", "border": "#2b2926", "accent": "#fb8a4c", "accentSoft": "rgba(251,138,76,0.12)" },
+    "status": { "live": "#22c55e" }
+  },
+  "font": {
+    "sans":  { "family": "Geist", "fallback": "system-ui, sans-serif", "weights": [400, 500, 600] },
+    "mono":  { "family": "Geist Mono", "fallback": "ui-monospace, monospace", "weights": [400, 500] },
+    "serif": { "family": "Instrument Serif", "fallback": "Georgia, serif", "style": "italic", "weights": [400] }
+  },
+  "size": { "base": "17px", "baseMobile": "16px", "display": "3rem", "h1": "2.25rem", "h2": "1.3rem", "h3": "1.075rem", "lede": "1.125rem", "small": "0.925rem", "mono": "0.8rem", "eyebrow": "0.75rem" },
+  "lineHeight": { "body": 1.65, "heading": 1.25, "display": 1.1, "code": 1.55 },
+  "tracking": { "display": "-0.03em", "heading": "-0.015em", "wordmark": "-0.02em", "mono": "0.01em", "eyebrow": "0.12em" },
+  "layout": { "measure": "680px", "wide": "960px", "gutter": "1.25rem", "header": "3.5rem", "breakpoint": "720px" },
+  "radius": { "base": "10px", "button": "8px", "chip": "6px", "code": "5px", "badge": "4px", "pill": "999px" },
+  "border": { "hairline": "1px", "accent": "2px" },
+  "motion": { "fast": "0.15s ease", "slow": "0.3s ease", "pulse": "2.4s ease-out" }
+}</code></pre>
+  </section>
+</main>
+
+<footer class="bottom">
+  <div class="inner">
+    <span class="mono">&copy; 2026 Alexander Perocho · perocho.com</span>
+    <span class="mono">Brand guide v1.0</span>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var btn = document.getElementById("theme-toggle");
+    var order = ["auto", "light", "dark"];
+    var i = 0;
+    try { var s = localStorage.getItem("brand-theme"); if (s && order.indexOf(s) > -1) i = order.indexOf(s); } catch (e) {}
+    function apply() {
+      var t = order[i];
+      if (t === "auto") document.documentElement.removeAttribute("data-theme");
+      else document.documentElement.setAttribute("data-theme", t);
+      btn.textContent = "theme: " + t;
+    }
+    apply();
+    btn.addEventListener("click", function () {
+      i = (i + 1) % order.length;
+      apply();
+      try { localStorage.setItem("brand-theme", order[i]); } catch (e) {}
+    });
+  })();
+</script>
+</body>
+</html>
