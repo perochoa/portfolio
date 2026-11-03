@@ -2,6 +2,7 @@
 title: "Teaching My AI Coding Assistants to Stop Repeating Mistakes"
 description: "One instructions file shared by every assistant, a corrections log that turns repeated feedback into rules, and hooks for the rules that keep getting broken."
 pubDate: "Oct 19 2026"
+updatedDate: "Nov 03 2026"
 ---
 
 I use AI coding assistants every day, mostly Claude Code and sometimes GitHub Copilot's CLI. For a while, the most annoying part wasn't wrong code. It was repeating myself. I'd tell an assistant not to commit to `main`, or that my Python environments are pyenv virtualenvs and not `.venv` folders, and the next session it had forgotten.
@@ -16,7 +17,7 @@ Each tool has its own file for global instructions: `~/.claude/CLAUDE.md` for Cl
 
 - **Python:** use pyenv virtualenvs and pin them with `pyenv local`, and never install into the system Python.
 - **Git:** never commit, push, merge, or rebase on `main`. Branches are named `<type>/<short-description>`. Commit messages are short, lowercase, and prefixed with the branch name. Never credit an AI as an author.
-- **Session handoffs:** keep a per-branch notes file so the next session can pick up where this one left off (more on that below).
+- **AI assistant config:** `CLAUDE.md`, `AGENTS.md`, and `.claude/` stay local unless the repo already has them. I'm often the only one on a team using these tools, so my config shouldn't end up in a shared repo by accident.
 - **Learning from corrections:** the loop described in the next section.
 
 Anything specific to one tool, like Claude Code's `settings.json`, lives in its own `ai/<tool>/` folder.
@@ -48,7 +49,10 @@ Written rules are suggestions. A model will usually follow them and occasionally
 - change `main` or `master` directly,
 - create a branch that doesn't match the naming pattern (a repo can override that pattern with `git config ai.branchPattern`),
 - force-push without `--force-with-lease`,
-- or commit a message that has uppercase letters, a missing branch prefix, a subject over 72 characters, or AI attribution.
+- commit a message that has uppercase letters, a missing branch prefix, a subject over 72 characters, or AI attribution,
+- or add or commit `CLAUDE.md`, `AGENTS.md`, or anything under `.claude/` in a repo that doesn't already have it on the remote's default branch.
+
+That last rule is the newest, and it went in as a written rule and a check at the same time. When an assistant creates one of those files in a repo that doesn't have it, say by running `/init`, the guard blocks the commit and tells it to list the file in `.git/info/exclude` instead. A repo where I do want to share them opts out with `git config ai.shareAgentConfig true`.
 
 When it blocks a command, it explains why on stderr, which goes back to the assistant, so it can fix the problem and try again.
 
@@ -56,34 +60,30 @@ It isn't perfect. While writing this site, it rejected a commit with the message
 
 One design choice is deliberate: **the git guard fails open.** If it can't parse a command, it lets it through. That's the opposite of what I teach for secrets in [my Claude Code workshop](../claude-code-workshop/), where a broken guard should block everything. The difference is the stakes. A git rule slipping through costs me a reworded commit. A leaked secret can't be taken back. How a guard should fail is a decision to make on purpose for each one, not a default to accept.
 
-## Handoffs between sessions
+## One subagent
 
-I clear sessions often: new feature, new component, or a session that's simply run long. Each fresh session used to start by asking me things I'd already explained.
+There's one custom subagent left: an `architecture-auditor`. It reviews a repo against the conventions of its own stack, looks for bloat (abstractions with one caller, config nobody changes, dead code), and writes a report with a simplification roadmap. It has no file-editing tools and is told to stick to read-only commands, so the report is all it produces.
 
-Now every repo keeps a handoff doc per branch: `.handoff/<branch>.md`, with sections for the goal, status, decisions (with the reason for each), gotchas, key files, and open questions. It's rewritten as the work goes, not appended to, so it stays short and true. A `SessionStart` hook reads the doc for the current branch and puts it in the new session's context, so it begins already knowing the state of the work.
+## What I took out, and why
 
-There's one wrinkle. In a repo that already has a `CLAUDE.md` or `AGENTS.md`, the handoff docs are committed with the feature, like any other project notes. In a repo that doesn't, I don't want assistant config showing up in it, so the hook keeps the docs local and adds `/.handoff/` to that repo's `.git/info/exclude`, never to `.gitignore`.
+The first version of this post described more than what's above. About a week after writing it, I pruned the setup down:
 
-## Subagents with a leash
+- **Session handoffs.** Every branch had a `.handoff/<branch>.md` doc, and a `SessionStart` hook loaded it into each new session so it started out knowing the state of the work.
+- **An implementer subagent and the hook behind it.** It applied steps from the auditor's report and nothing else. The hook fed it the exact report, limited it to the files the report cited, and blocked it from finishing until anything else was reverted. That was almost 400 lines of Python.
+- **Most of the skills.** Engineering and documentation standards, plus skills for GitLab and Jira.
 
-The most elaborate piece is a pair of subagents. An `architecture-auditor` reviews a repo against best practices for its stack and writes a report with a numbered simplification roadmap. An `architecture-implementer` applies steps from that roadmap, and nothing else.
+The setup was getting bloated and over-complicated, so I started from a cleaner slate. I'm adding config back one piece at a time instead of all at once. That way I know exactly what I want, and what's just fluff.
 
-A hook enforces the "nothing else":
-
-- It records each finished audit report under an ID.
-- The implementer's prompt must be exactly `audit: <id>` and `steps: <which ones>`, naming a recorded audit for the current repo. The hook replaces the prompt with the actual report, so the implementer works from what the auditor wrote, not from a paraphrase.
-- The implementer can only edit files the report cites.
-- When it tries to finish, the hook checks every change against the report and blocks the stop until anything uncited has been reverted.
-
-Splitting "decide what to change" from "change it" turned out to be useful well beyond AI. It's the same separation as a design review followed by implementation, and it makes it obvious when the implementation wandered off.
+The implementer taught me something more specific. Agents aren't good at "pipeline" work, where each agent needs context from a previous session or a previous agent. The implementer was built entirely on that, and the handoffs were the same idea between sessions. I'm working on changing my workflow to reflect that.
 
 ## Testing the config
 
-Since this is real software, it has a check script. `scripts/check.sh` runs shellcheck and ruff, checks the syntax of every bash, zsh, and Python file, and then runs the bootstrap into a throwaway `$HOME` to verify the symlinks, the files created from templates, the backups, that running it twice changes nothing, and that the hooks behave. CI runs it on macOS and in a Fedora container.
+Since this is real software, it has a check script. `scripts/check.sh` runs shellcheck and ruff, checks the syntax of every bash, zsh, and Python file, and then runs the bootstrap into a throwaway `$HOME` to verify the symlinks, the files created from templates, the backups, that running it twice changes nothing, and that an interactive zsh starts cleanly. CI runs it on macOS and in a Fedora container.
 
 ## What I've learned
 
 - **Write rules down before trying to enforce them.** Most corrections never come up a second time, and logging them costs nothing. The log shows which rules deserve a hook.
-- **Hooks are for mechanical rules.** "Lowercase commit messages" is easy to check. "Write clear documentation" isn't, so it stays a written rule, with a skill that describes what good looks like.
+- **Hooks are for mechanical rules.** "Lowercase commit messages" is easy to check. "Write clear documentation" isn't, so it stays a written rule.
+- **Add config slowly.** It's easy to build more guardrails than you can keep track of. Each new rule, hook, or agent should earn its place, and the ones that don't should go.
 - **Give the assistant the reason, not just the rule.** Every block message and every rule says *why*. An assistant that knows why `main` is protected makes better choices in the cases the rule doesn't cover.
 - **This isn't only about AI.** Most of these are the guardrails I'd want for a new teammate too. The assistant just forgets faster.

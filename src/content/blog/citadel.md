@@ -2,6 +2,7 @@
 title: "Citadel: A Backup Vault for My Domain, Email, and Passwords"
 description: "Moving onto my own domain with Cloudflare DNS, Fastmail, and Bitwarden, then building a private repo that can rebuild all three from scratch, without a single plaintext secret in it."
 pubDate: "Oct 22 2026"
+updatedDate: "Nov 03 2026"
 ---
 
 This week I moved onto my own domain, `perocho.com`. The site you're reading is served from it, and so is my email. Owning the domain means I'm the one responsible when it breaks, so I also built **citadel**: a private repository with enough in it to rebuild my domain, my email, and my password vault from nothing.
@@ -52,11 +53,13 @@ if address :is "X-Delivered-To" "<receipts address>" {
 
 # Labelled, but stays in the inbox
 if address :is "X-Delivered-To" "<contact address>" {
-  fileinto :copy "INBOX.Hello";
+  fileinto :copy "INBOX.Contact";
 }
 ```
 
 The sign-up subdomain isn't live yet. Mail for a subdomain only arrives if that subdomain has its own MX records, and I haven't published them. I wrote that down in the repo instead of leaving a rule that looks like it works but quietly matches nothing.
+
+The rules keep growing as I see what lands where. The latest one files bank and payment notifications that arrive at my login address into the same Billing folder as receipts instead of the inbox, matched on the sender's domain and the subject.
 
 ## Why a backup vault?
 
@@ -148,6 +151,22 @@ git diff --quiet -I '^;' -I '[[:space:]]SOA[[:space:]]' -- cloudflare/
 ```
 
 The first runs failed for a much less interesting reason. I'd saved the token as a repo secret under one name and referenced it in the workflow under another. Then, once the names matched, I passed it to the scripts under the wrong environment variable. Two small fix PRs, both the same lesson: GitHub Actions replaces a missing secret with an empty string instead of failing, so a typo only shows up as a confusing error much later. The scripts do check for an empty token, which is the only reason the failures were obvious at all.
+
+## The first scheduled run
+
+On November 1, the workflow ran on its own schedule for the first time, and it failed. That was the right result.
+
+A few days before, I'd started building [a site for my family's repair business](../perocho-repairs/) at `repairs.perocho.com`, and that needed a few changes in the Cloudflare dashboard:
+
+- a CNAME for the `repairs` subdomain, pointing at GitHub Pages,
+- the proxy turned on for both `repairs` and `www`, since both certificates had already been issued,
+- and a Google site verification TXT record.
+
+None of them went into `dnsconfig.js`. That's exactly the kind of edit the "nothing in the dashboard" rule is about, and both checks caught it. The zone snapshot had real changes, so the job pushed `chore/dns-snapshot-2026-11` for review. The preview found that the live zone and `dnsconfig.js` disagreed, so the job failed, and the monthly issue listed both for me to deal with. Like step 2 above says, the someone was me.
+
+This is the case the check exists for. If I'd run `dns.sh push` for an unrelated change before noticing, DNSControl would have made the live zone match the file: the `repairs` record and the verification record deleted, and the proxy turned back off. The site I'd just set up would have gone offline.
+
+The fix is the boring part. The changes go into `dnsconfig.js`, where they should have gone in the first place, then the preview should come back with no changes, and the snapshot branch gets merged.
 
 ## What I'd tell someone doing the same
 
