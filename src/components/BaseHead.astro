@@ -22,8 +22,8 @@ const { title, description, image = FallbackImage } = Astro.props;
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<meta name="theme-color" content="#fbfaf8" media="(prefers-color-scheme: light)" />
-<meta name="theme-color" content="#121110" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#f6f2ea" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1a1614" media="(prefers-color-scheme: dark)" />
 <link rel="icon" href={withBase("favicon.ico")} sizes="32x32" />
 <link rel="icon" type="image/png" href={withBase("favicon-96x96.png")} sizes="96x96" />
 <link rel="icon" type="image/svg+xml" href={withBase("favicon.svg")} />
@@ -39,7 +39,6 @@ const { title, description, image = FallbackImage } = Astro.props;
 
 <Font cssVariable="--font-sans" preload />
 <Font cssVariable="--font-mono" />
-<Font cssVariable="--font-serif" />
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
