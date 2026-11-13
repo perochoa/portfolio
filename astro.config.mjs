@@ -29,12 +29,5 @@ export default defineConfig({
       styles: ["normal"],
       fallbacks: ["ui-monospace", "monospace"],
     },
-    {
-      provider: fontProviders.google(),
-      name: "Instrument Serif",
-      cssVariable: "--font-serif",
-      styles: ["normal", "italic"],
-      fallbacks: ["Georgia", "serif"],
-    },
   ],
 });

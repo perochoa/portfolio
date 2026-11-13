@@ -11,7 +11,7 @@ const recentPosts = (await getPosts()).slice(0, 3);
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
 	<main>
 		<p class="status mono"><span class="dot" aria-hidden="true"></span>ML Platform Engineer at Mobility Global</p>
-		<h1>Hi, I'm <span class="serif">Alex</span>.</h1>
+		<h1>Hi, I'm <span class="hl">Alex</span>.</h1>
 		<p class="lede">
 			I'm an ML platform engineer at <a href="https://mobilityglobal.com" target="_blank">Mobility Global</a> and a final-year
 			Computer Science student at Western University. I build the infrastructure that gets
@@ -92,11 +92,6 @@ const recentPosts = (await getPosts()).slice(0, 3);
 		font-size: 3rem;
 		margin-bottom: 1.25rem;
 	}
-	h1 .serif {
-		color: var(--accent);
-		font-size: 1.12em;
-		padding-right: 0.04em;
-	}
 	.lede {
 		font-size: 1.125rem;
 	}
@@ -132,7 +127,7 @@ const recentPosts = (await getPosts()).slice(0, 3);
 	}
 	.button:hover {
 		border-color: var(--accent);
-		color: var(--accent);
+		color: var(--accent-text);
 	}
 	.button.primary {
 		border-color: var(--text);
@@ -142,7 +137,7 @@ const recentPosts = (await getPosts()).slice(0, 3);
 	.button.primary:hover {
 		border-color: var(--accent);
 		background: var(--accent);
-		color: var(--bg);
+		color: #1a1614;
 	}
 	.button.primary span {
 		transition: transform 0.15s ease;
@@ -198,7 +193,7 @@ const recentPosts = (await getPosts()).slice(0, 3);
 		text-decoration: none;
 	}
 	.section-head a:hover {
-		color: var(--accent);
+		color: var(--accent-text);
 	}
 	.posts {
 		margin: 0;
@@ -221,7 +216,7 @@ const recentPosts = (await getPosts()).slice(0, 3);
 		flex-shrink: 0;
 	}
 	.posts a:hover .title {
-		color: var(--accent);
+		color: var(--accent-text);
 	}
 	@media (max-width: 720px) {
 		main {
