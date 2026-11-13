@@ -4,11 +4,12 @@ import FormattedDate from '../components/FormattedDate.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getPosts } from '../posts';
 import { SITE_DESCRIPTION, SITE_TITLE, SOCIAL } from '../consts';
+import { homeJsonLd } from '../seo';
 
 const recentPosts = (await getPosts()).slice(0, 3);
 ---
 
-<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} jsonLd={homeJsonLd}>
 	<main>
 		<p class="status mono"><span class="dot" aria-hidden="true"></span>ML Platform Engineer at Mobility Global</p>
 		<h1>Hi, I'm <span class="hl">Alex</span>.</h1>

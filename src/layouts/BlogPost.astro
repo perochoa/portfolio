@@ -1,16 +1,34 @@
 ---
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
+import FallbackImage from '../assets/avatar.jpg';
 import FormattedDate from '../components/FormattedDate.astro';
+import { blogPostingJsonLd } from '../seo';
 import { withBase } from '../utils';
 import BaseLayout from './BaseLayout.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
 const { title, description, pubDate, updatedDate, heroImage, draft } = Astro.props;
+const jsonLd = blogPostingJsonLd({
+	title,
+	description,
+	url: new URL(Astro.url.pathname, Astro.site),
+	image: new URL((heroImage ?? FallbackImage).src, Astro.site),
+	pubDate,
+	updatedDate,
+});
 ---
 
-<BaseLayout title={title} description={description} image={heroImage}>
+<BaseLayout
+	title={title}
+	description={description}
+	image={heroImage}
+	publishedTime={pubDate}
+	modifiedTime={updatedDate}
+	jsonLd={jsonLd}
+	noindex={draft}
+>
 	<main>
 		<article>
 			<a class="back mono" href={withBase("/blog")}>&larr; All posts</a>
