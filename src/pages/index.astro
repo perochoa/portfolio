@@ -4,11 +4,12 @@ import FormattedDate from '../components/FormattedDate.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getPosts } from '../posts';
 import { SITE_DESCRIPTION, SITE_TITLE, SOCIAL } from '../consts';
+import { homeJsonLd } from '../seo';
 
 const recentPosts = (await getPosts()).slice(0, 3);
 ---
 
-<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} jsonLd={homeJsonLd}>
 	<main>
 		<p class="status mono"><span class="dot" aria-hidden="true"></span>ML Platform Engineer at Mobility Global</p>
 		<h1>Hi, I'm <span class="hl">Alex</span>.</h1>
@@ -22,7 +23,7 @@ const recentPosts = (await getPosts()).slice(0, 3);
 			This site is my sandbox for writing about that work, side projects, and whatever else I'm into.
 		</p>
 		<ul class="actions">
-			<li><a class="button primary" href={withBase("/experience")}>Experience <span aria-hidden="true">&rarr;</span></a></li>
+			<li><a class="button primary" href={withBase("/experience/")}>Experience <span aria-hidden="true">&rarr;</span></a></li>
 			<li><a class="button" href={SOCIAL.github} target="_blank">GitHub</a></li>
 			<li><a class="button" href={SOCIAL.linkedin} target="_blank">LinkedIn</a></li>
 			<li><a class="button" href={`mailto:${SOCIAL.email}`}>Email</a></li>
@@ -36,7 +37,7 @@ const recentPosts = (await getPosts()).slice(0, 3);
 
 		<div class="section-head">
 			<h2>Recent writing</h2>
-			<a class="mono" href={withBase("/blog")}>All posts &rarr;</a>
+			<a class="mono" href={withBase("/blog/")}>All posts &rarr;</a>
 		</div>
 		<ul class="posts">
 			{

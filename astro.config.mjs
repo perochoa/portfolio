@@ -6,6 +6,8 @@ import { defineConfig, fontProviders } from "astro/config";
 // https://astro.build/config
 export default defineConfig({
   site: "https://perocho.com",
+  // GitHub Pages 301s /blog to /blog/; keep dev and internal links on the canonical form.
+  trailingSlash: "always",
   integrations: [sitemap()],
   markdown: {
     shikiConfig: {
